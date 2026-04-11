@@ -28,9 +28,7 @@ export class DashboardPage {
     this.loadSummary();
   }
 
-  /**
-   * Carga el resumen del tenant
-   */
+  /**Carga el resumen del tenant*/
   private loadSummary(): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -48,9 +46,7 @@ export class DashboardPage {
     });
   }
 
-  /**
-   * Obtiene el texto descriptivo del estado de suscripción
-   */
+  /**Obtiene el texto descriptivo del estado de suscripción*/
   getSubscriptionStatusText(): string {
     const status = this.summary()?.subscription.status;
     switch (status) {

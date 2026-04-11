@@ -1,3 +1,5 @@
+/**Models for Platform Authentication feature*/
+
 export interface PlatformLoginRequest {
   email: string;
   password: string;

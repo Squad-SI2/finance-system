@@ -37,10 +37,8 @@ export class AuthService {
     this.initializeAuth();
   }
 
-  /**
-   * Inicializa la autenticación al cargar la aplicación
-   * Valida si hay un token y trae la información del usuario
-   */
+  /**Inicializa la autenticación al cargar la aplicación 
+   * Valida si hay un token y trae la información del usuario */
   private initializeAuth(): void {
     if (this.isTokenValid()) {
       this.isAuthenticated$.set(true);
@@ -55,20 +53,12 @@ export class AuthService {
     }
   }
 
-  /**
-   * Login con email y contraseña
-   * Consume: POST /api/auth/login
-   * Backend retorna: ApiResponse<AuthTokenResponse>
-   * Headers: X-Tenant-Slug
-   */
   login(credentials: LoginRequest, tenantSlug: string): Observable<AuthTokenResponse> {
     this.isLoading$.set(true);
     this.error$.set(null);
-
     const headers = new HttpHeaders({
       'X-Tenant-Slug': tenantSlug,
     });
-
     return this.http
       .post<ApiResponse<AuthTokenResponse>>(`${this.apiUrl}/auth/login`, credentials, {
         headers,
@@ -80,8 +70,6 @@ export class AuthService {
           this.saveTenantSlug(tenantSlug);
           this.isAuthenticated$.set(true);
           this.isLoading$.set(false);
-
-          // Obtener información del usuario después de login exitoso
           this.me().subscribe();
         }),
         catchError((error) => {
@@ -94,19 +82,12 @@ export class AuthService {
       );
   }
 
-  /**
-   * Obtiene la información del usuario autenticado
-   * Consume: GET /api/auth/me
-   * Backend retorna: ApiResponse<AuthenticatedTenantUserResponse>
-   */
   me(): Observable<UserInfo> {
     const tenantSlug = this.getTenantSlug();
     let headers = new HttpHeaders();
-
     if (tenantSlug) {
       headers = headers.set('X-Tenant-Slug', tenantSlug);
     }
-
     return this.http
       .get<ApiResponse<UserInfo>>(`${this.apiUrl}/auth/me`, { headers })
       .pipe(
@@ -121,15 +102,9 @@ export class AuthService {
       );
   }
 
-  /**
-   * Refresh del token usando el refresh token
-   * Consume: POST /api/auth/refresh
-   * Backend retorna: ApiResponse<AuthTokenResponse>
-   */
   refreshToken(): Observable<AuthTokenResponse> {
     const refreshTokenValue = this.getRefreshToken();
     const tenantSlug = this.getTenantSlug();
-
     if (!refreshTokenValue) {
       return of().pipe(
         tap(() => {
@@ -137,12 +112,10 @@ export class AuthService {
         })
       );
     }
-
     let headers = new HttpHeaders();
     if (tenantSlug) {
       headers = headers.set('X-Tenant-Slug', tenantSlug);
     }
-
     return this.http
       .post<ApiResponse<AuthTokenResponse>>(
         `${this.apiUrl}/auth/refresh`,
@@ -161,36 +134,24 @@ export class AuthService {
       );
   }
 
-  /**
-   * Logout del usuario
-   * Consume: POST /api/auth/logout
-   * Limpia tokens y redirige a login
-   */
   logout(): void {
     this.isLoading$.set(true);
-
-    // Llamar al endpoint de logout (sin esperar respuesta crítica)
     const tenantSlug = this.getTenantSlug();
     let headers = new HttpHeaders();
-
     if (tenantSlug) {
       headers = headers.set('X-Tenant-Slug', tenantSlug);
     }
-
     this.http.post(`${this.apiUrl}/auth/logout`, {}, { headers }).subscribe({
       complete: () => {
         this.clearTokens();
       },
       error: () => {
-        // Aunque falle el logout en backend, limpiamos el frontend
         this.clearTokens();
       },
     });
   }
 
-  /**
-   * Limpia el estado de autenticación
-   */
+  /**Limpia el estado de autenticación*/
   private clearTokens(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.refreshTokenKey);
@@ -203,54 +164,40 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
-  /**
-   * Guarda el token de acceso y refresh en localStorage
-   */
+  /**Guarda el token de acceso y refresh en localStorage*/
   private saveTokens(accessToken: string, refreshToken: string): void {
     localStorage.setItem(this.tokenKey, accessToken);
     localStorage.setItem(this.refreshTokenKey, refreshToken);
     this.authStateSubject.next(true);
   }
 
-  /**
-   * Guarda el tenant slug en localStorage
-   */
+  /**Guarda el tenant slug en localStorage*/
   private saveTenantSlug(tenantSlug: string): void {
     localStorage.setItem(this.tenantSlugKey, tenantSlug);
   }
 
-  /**
-   * Obtiene el token de acceso
-   */
+  /**Obtiene el token de acceso*/
   getAccessToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
-  /**
-   * Obtiene el refresh token
-   */
+  /**Obtiene el refresh token*/
   private getRefreshToken(): string | null {
     return localStorage.getItem(this.refreshTokenKey);
   }
 
-  /**
-   * Obtiene el tenant slug
-   */
+  /**Obtiene el tenant slug*/
   getTenantSlug(): string | null {
     return localStorage.getItem(this.tenantSlugKey);
   }
 
-  /**
-   * Valida si el token es válido (existe)
-   */
+  /**Valida si el token es válido (existe)*/
   isTokenValid(): boolean {
     const token = this.getAccessToken();
     return token !== null && token !== undefined && token.length > 0;
   }
 
-  /**
-   * Observable del estado de autenticación (para compatibilidad)
-   */
+  /**Observable del estado de autenticación (para compatibilidad)*/
   getAuthState(): Observable<boolean> {
     return this.authStateSubject.asObservable();
   }

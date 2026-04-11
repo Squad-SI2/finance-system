@@ -1,3 +1,5 @@
+/***Pruebas unitarias para LoginAdminPage */
+
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { LoginAdminPage } from "./login-admin-page";

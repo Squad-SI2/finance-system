@@ -32,9 +32,7 @@ export class PlatformAuthService {
     this.initializeAuth();
   }
 
-  /**
-   * Inicializa la autenticación al cargar la aplicación
-   */
+  /**Inicializa la autenticación al cargar la aplicación*/
   private initializeAuth(): void {
     if (this.isTokenValid()) {
       this.isAuthenticated$.set(true);
@@ -49,14 +47,11 @@ export class PlatformAuthService {
     }
   }
 
-  /**
-   * Login exclusivo para Super Admin
-   * Consume: POST /api/platform/auth/login
-   */
+  /**Login exclusivo para Super Admin
+   * Consume: POST /api/platform/auth/login*/
   login(credentials: PlatformLoginRequest): Observable<PlatformAuthTokenResponse> {
     this.isLoading$.set(true);
     this.error$.set(null);
-
     return this.http
       .post<ApiResponse<PlatformAuthTokenResponse>>(`${this.apiUrl}/login`, credentials)
       .pipe(
@@ -65,8 +60,6 @@ export class PlatformAuthService {
           this.saveTokens(tokenData.accessToken, tokenData.refreshToken);
           this.isAuthenticated$.set(true);
           this.isLoading$.set(false);
-
-          // Carga los datos del admin
           this.me().subscribe();
         }),
         catchError((error) => {
@@ -79,10 +72,8 @@ export class PlatformAuthService {
       );
   }
 
-  /**
-   * Obtiene la información del superadmin autenticado
-   * Consume: GET /api/platform/auth/me
-   */
+  /**Obtiene la información del superadmin autenticado
+   * Consume: GET /api/platform/auth/me*/
   me(): Observable<PlatformUserInfo> {
     return this.http
       .get<ApiResponse<PlatformUserInfo>>(`${this.apiUrl}/me`)
@@ -98,13 +89,10 @@ export class PlatformAuthService {
       );
   }
 
-  /**
-   * Refresh del token para plataforma
-   * Consume: POST /api/platform/auth/refresh
-   */
+  /**Refresh del token para plataforma
+   * Consume: POST /api/platform/auth/refresh*/
   refreshToken(): Observable<PlatformAuthTokenResponse> {
     const refreshTokenValue = this.getRefreshToken();
-
     if (!refreshTokenValue) {
       return of().pipe(
         tap(() => {
@@ -112,7 +100,6 @@ export class PlatformAuthService {
         })
       );
     }
-
     return this.http
       .post<ApiResponse<PlatformAuthTokenResponse>>(`${this.apiUrl}/refresh`, {
         refreshToken: refreshTokenValue,
@@ -129,10 +116,8 @@ export class PlatformAuthService {
       );
   }
 
-  /**
-   * Logout de superadmin
-   * Consume: POST /api/platform/auth/logout
-   */
+  /**Logout de superadmin
+   * Consume: POST /api/platform/auth/logout*/
   logout(): void {
     this.isLoading$.set(true);
 
@@ -146,9 +131,7 @@ export class PlatformAuthService {
     });
   }
 
-  /**
-   * Limpia el estado y redirige al login administrativo
-   */
+  /**Limpia el estado y redirige al login administrativo*/
   private clearTokens(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.refreshTokenKey);
@@ -159,31 +142,23 @@ export class PlatformAuthService {
     this.router.navigate(['/platform/auth/login']);
   }
 
-  /**
-   * Guarda los tokens en localStorage
-   */
+  /**Guarda los tokens en localStorage*/
   private saveTokens(accessToken: string, refreshToken: string): void {
     localStorage.setItem(this.tokenKey, accessToken);
     localStorage.setItem(this.refreshTokenKey, refreshToken);
   }
 
-  /**
-   * Obtiene el token de acceso
-   */
+  /**Obtiene el token de acceso*/
   getAccessToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
-  /**
-   * Obtiene el token de refresco
-   */
+  /**Obtiene el token de refresco*/
   private getRefreshToken(): string | null {
     return localStorage.getItem(this.refreshTokenKey);
   }
 
-  /**
-   * Valida si existe el token
-   */
+  /**Valida si existe el token*/
   isTokenValid(): boolean {
     const token = this.getAccessToken();
     return token !== null && token !== undefined && token.trim().length > 0;

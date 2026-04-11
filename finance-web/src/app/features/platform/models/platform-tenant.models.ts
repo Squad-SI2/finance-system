@@ -1,3 +1,5 @@
+/**Interfaz que representa la respuesta de un tenant en la plataforma.*/
+
 export interface PlatformTenantResponse {
   id: string;
   name: string;

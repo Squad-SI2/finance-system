@@ -5,14 +5,14 @@
 @import "tailwindcss/utilities.css";
 
 /*
- * Strict Grayscale Design System
+ * Estricto Sistema de Diseño en Escala de Grises
  * ─────────────────────────────
- * Primary Text / Dark BG:   #333333
- * Secondary Text:            #666666
- * Borders / Icons:           #999999
- * Secondary BG / Hover:      #cccccc
- * Subtle BG:                 #f5f5f5
- * Primary BG / Cards:        #ffffff
+ * Texto Primario / Fondo Oscuro:   #333333
+ * Texto Secundario:                #666666
+ * Bordes / Iconos:                 #999999
+ * Fondo Secundario / Hover:        #cccccc
+ * Fondo Sutil:                     #f5f5f5
+ * Fondo Primario / Tarjetas:       #ffffff
  */
 
 @theme {

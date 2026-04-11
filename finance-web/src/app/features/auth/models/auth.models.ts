@@ -1,10 +1,4 @@
-/**
- * Models for Authentication feature
- * DTOs aligned with the hexagonal backend:
- *   - identity/auth/application/dto/LoginRequest.java
- *   - identity/auth/application/dto/AuthTokenResponse.java
- *   - identity/auth/application/dto/AuthenticatedTenantUserResponse.java
- */
+/**Models for Authentication feature*/
 
 /** Matches: identity.auth.application.dto.LoginRequest */
 export interface LoginRequest {

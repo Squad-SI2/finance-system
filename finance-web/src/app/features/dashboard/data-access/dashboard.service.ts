@@ -3,10 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, forkJoin, map } from 'rxjs';
 import { ApiResponse } from '../../../core/models/api-response.model';
 
-/**
- * Matches: platform.subscriptions.application.dto response
- * from GET /api/subscription/current
- */
+/**Matches: platform.subscriptions.application.dto response
+  from GET /api/subscription/current*/
 export type SubscriptionInfo = {
   id: string;
   tenantId: string;
@@ -21,10 +19,8 @@ export type SubscriptionInfo = {
   maxRoles: number;
 };
 
-/**
- * Matches: platform.tenantsettings.application.dto response
- * from GET /api/settings/tenant
- */
+/**Matches: platform.tenantsettings.application.dto response
+  from GET /api/settings/tenant*/
 export type TenantSettings = {
   companyName: string;
   legalName: string;
@@ -34,10 +30,8 @@ export type TenantSettings = {
   contactPhone: string;
 };
 
-/**
- * Composed summary used by the dashboard page
- * Built from multiple endpoints since /api/dashboard/tenant/summary doesn't exist
- */
+/**Composed summary used by the dashboard page
+  Built from multiple endpoints since /api/dashboard/tenant/summary doesn't exist*/
 export type TenantSummary = {
   tenant: {
     name: string;
@@ -58,10 +52,8 @@ export type TenantSummary = {
   alerts: string[];
 };
 
-/**
- * Matches: identity.users.application.dto.TenantUserResponse
- * Minimal type used only for counting users
- */
+/**Matches: identity.users.application.dto.TenantUserResponse
+  Minimal type used only for counting users*/
 type UserSummary = {
   id: string;
   active: boolean;
@@ -73,8 +65,7 @@ type UserSummary = {
 export class DashboardService {
   private http = inject(HttpClient);
 
-  /**
-   * Compone el resumen del tenant a partir de los endpoints que SÍ existen:
+  /**Compone el resumen del tenant a partir de los endpoints que SÍ existen:
    *   - GET /api/subscription/current → datos del plan/suscripción
    *   - GET /api/users → lista de usuarios (para contar)
    *   - GET /api/settings/tenant → nombre del tenant

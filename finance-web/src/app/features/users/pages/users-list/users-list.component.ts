@@ -22,9 +22,7 @@ export class UsersListComponent {
     this.loadUsers();
   }
 
-  /**
-   * Carga la lista de usuarios
-   */
+  /**Carga la lista de usuarios*/
   private loadUsers(): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -42,10 +40,8 @@ export class UsersListComponent {
     });
   }
 
-  /**
-   * Activa o desactiva un usuario
-   * Usa los endpoints reales: PATCH /api/users/{id}/activate | deactivate
-   */
+  /**Activa o desactiva un usuario
+   * Usa los endpoints reales: PATCH /api/users/{id}/activate | deactivate*/
   toggleUserActive(user: User): void {
     const action$ = user.active
       ? this.usersService.deactivateUser(user.id)
@@ -64,9 +60,7 @@ export class UsersListComponent {
     });
   }
 
-  /**
-   * Obtiene la clase CSS para el badge de estado
-   */
+  /**Obtiene la clase CSS para el badge de estado*/
   getStatusBadgeClass(active: boolean): string {
     const baseClass = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium';
     return active
@@ -74,16 +68,12 @@ export class UsersListComponent {
       : `${baseClass} bg-[#f5f5f5] text-[#666666]`;
   }
 
-  /**
-   * Obtiene el texto descriptivo del estado
-   */
+  /**Obtiene el texto descriptivo del estado*/
   getStatusText(active: boolean): string {
     return active ? 'Activo' : 'Inactivo';
   }
 
-  /**
-   * Formatea la fecha para mostrar
-   */
+  /**Formatea la fecha para mostrar*/
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString('es-ES', {
       year: 'numeric',

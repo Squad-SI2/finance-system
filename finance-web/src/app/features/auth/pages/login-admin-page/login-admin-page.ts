@@ -42,7 +42,6 @@ export class LoginAdminPage {
       .subscribe({
         next: () => {
           this.isLoading.set(false);
-          // Redirige al módulo de plataforma que crearemos a continuación
           this.router.navigateByUrl("/platform/tenants");
         },
         error: (err) => {
