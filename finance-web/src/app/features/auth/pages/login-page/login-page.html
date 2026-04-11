@@ -1,65 +1,31 @@
-<div class="space-y-4">
-  <!-- Mensaje de error -->
-  @if (errorMessage()) {
-    <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700 border border-red-200">
-      {{ errorMessage() }}
-    </div>
-  }
+<form class="space-y-5">
+  <div>
+    <label for="email" class="mb-2 block text-sm font-medium text-slate-700">
+      Correo electrónico
+    </label>
+    <input
+      id="email"
+      type="email"
+      placeholder="tu@email.com"
+      class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm transition outline-none focus:border-slate-400" />
+  </div>
 
-  <form (ngSubmit)="onSubmit()" class="space-y-5">
-    <!-- Campo Tenant Slug -->
-    <div>
-      <label for="tenantSlug" class="mb-2 block text-sm font-medium text-slate-700">
-        Tenant / Empresa
-      </label>
-      <input
-        id="tenantSlug"
-        type="text"
-        placeholder="ej: financruz"
-        [value]="tenantSlug()"
-        (input)="onTenantSlugChange($event.target.value)"
-        class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm transition outline-none focus:border-slate-400" />
-      <p class="mt-1 text-xs text-slate-500">
-        Ingresa el slug del tenant para acceder
-      </p>
-    </div>
+  <div>
+    <label for="password" class="mb-2 block text-sm font-medium text-slate-700">
+      Contraseña
+    </label>
+    <input
+      id="password"
+      type="password"
+      placeholder="••••••••"
+      class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm transition outline-none focus:border-slate-400" />
+  </div>
 
-    <!-- Campo Email -->
-    <div>
-      <label for="email" class="mb-2 block text-sm font-medium text-slate-700">
-        Correo electrónico
-      </label>
-      <input
-        id="email"
-        type="email"
-        placeholder="tu@email.com"
-        [value]="email()"
-        (input)="onEmailChange($event.target.value)"
-        class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm transition outline-none focus:border-slate-400" />
-    </div>
+  <button
+    type="submit"
+    class="w-full rounded-2xl bg-slate-900 px-4 py-3 text-sm font-medium text-white transition hover:opacity-90">
+    Ingresar
+  </button>
 
-    <!-- Campo Password -->
-    <div>
-      <label for="password" class="mb-2 block text-sm font-medium text-slate-700">
-        Contraseña
-      </label>
-      <input
-        id="password"
-        type="password"
-        placeholder="••••••••"
-        [value]="password()"
-        (input)="onPasswordChange($event.target.value)"
-        class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm transition outline-none focus:border-slate-400" />
-    </div>
-
-    <!-- Botón Submit -->
-    <button
-      type="submit"
-      [disabled]="isLoading()"
-      class="w-full rounded-2xl bg-slate-900 px-4 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed">
-      {{ isLoading() ? 'Ingresando...' : 'Ingresar' }}
-    </button>
-
-    <p class="text-center text-sm text-slate-500">¿Olvidaste tu contraseña?</p>
-  </form>
-</div>
+  <p class="text-center text-sm text-slate-500">¿Olvidaste tu contraseña?</p>
+</form>

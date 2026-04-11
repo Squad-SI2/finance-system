@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes } from "@angular/router";
 import { AppLayout } from '../../core/layout/layouts/app-layout/app-layout';
 
 export const USERS_ROUTES: Routes = [
