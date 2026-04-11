@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { signal } from '@angular/core';
 import {
   LoginRequest,
   AuthTokenResponse,
   UserInfo,
-  MeResponse,
 } from '../models/auth.models';
+import { ApiResponse } from '../../../core/models/api-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +27,7 @@ export class AuthService {
   isLoading$ = signal(false);
   error$ = signal<string | null>(null);
 
-  // BehaviorSubject para compatibilidad con subscripciones (si es necesario)
+  // BehaviorSubject para compatibilidad con subscripciones
   private authStateSubject = new BehaviorSubject<boolean>(this.isTokenValid());
 
   constructor(
@@ -45,8 +45,8 @@ export class AuthService {
     if (this.isTokenValid()) {
       this.isAuthenticated$.set(true);
       this.me().subscribe({
-        next: (response) => {
-          this.user$.set(response.user);
+        next: (userInfo) => {
+          this.user$.set(userInfo);
         },
         error: () => {
           this.logout();
@@ -58,7 +58,8 @@ export class AuthService {
   /**
    * Login con email y contraseña
    * Consume: POST /api/auth/login
-   * Headers: X-Tenant-Slug (si está disponible)
+   * Backend retorna: ApiResponse<AuthTokenResponse>
+   * Headers: X-Tenant-Slug
    */
   login(credentials: LoginRequest, tenantSlug: string): Observable<AuthTokenResponse> {
     this.isLoading$.set(true);
@@ -69,14 +70,14 @@ export class AuthService {
     });
 
     return this.http
-      .post<AuthTokenResponse>(`${this.apiUrl}/auth/login`, credentials, {
+      .post<ApiResponse<AuthTokenResponse>>(`${this.apiUrl}/auth/login`, credentials, {
         headers,
-        responseType: 'json',
       })
       .pipe(
-        tap((response) => {
-          this.saveTokens(response.accessToken, response.refreshToken);
-          this.savetenantSlug(tenantSlug);
+        map((response) => response.data),
+        tap((tokenData) => {
+          this.saveTokens(tokenData.accessToken, tokenData.refreshToken);
+          this.saveTenantSlug(tenantSlug);
           this.isAuthenticated$.set(true);
           this.isLoading$.set(false);
 
@@ -96,8 +97,9 @@ export class AuthService {
   /**
    * Obtiene la información del usuario autenticado
    * Consume: GET /api/auth/me
+   * Backend retorna: ApiResponse<AuthenticatedTenantUserResponse>
    */
-  me(): Observable<MeResponse> {
+  me(): Observable<UserInfo> {
     const tenantSlug = this.getTenantSlug();
     let headers = new HttpHeaders();
 
@@ -106,10 +108,11 @@ export class AuthService {
     }
 
     return this.http
-      .get<MeResponse>(`${this.apiUrl}/auth/me`, { headers, responseType: 'json' })
+      .get<ApiResponse<UserInfo>>(`${this.apiUrl}/auth/me`, { headers })
       .pipe(
-        tap((response) => {
-          this.user$.set(response.user);
+        map((response) => response.data),
+        tap((userInfo) => {
+          this.user$.set(userInfo);
         }),
         catchError((error) => {
           this.error$.set('Error al obtener información del usuario');
@@ -121,12 +124,13 @@ export class AuthService {
   /**
    * Refresh del token usando el refresh token
    * Consume: POST /api/auth/refresh
+   * Backend retorna: ApiResponse<AuthTokenResponse>
    */
   refreshToken(): Observable<AuthTokenResponse> {
-    const refreshToken = this.getRefreshToken();
+    const refreshTokenValue = this.getRefreshToken();
     const tenantSlug = this.getTenantSlug();
 
-    if (!refreshToken) {
+    if (!refreshTokenValue) {
       return of().pipe(
         tap(() => {
           this.logout();
@@ -140,14 +144,15 @@ export class AuthService {
     }
 
     return this.http
-      .post<AuthTokenResponse>(
+      .post<ApiResponse<AuthTokenResponse>>(
         `${this.apiUrl}/auth/refresh`,
-        { refreshToken },
-        { headers, responseType: 'json' }
+        { refreshToken: refreshTokenValue },
+        { headers }
       )
       .pipe(
-        tap((response) => {
-          this.saveTokens(response.accessToken, response.refreshToken);
+        map((response) => response.data),
+        tap((tokenData) => {
+          this.saveTokens(tokenData.accessToken, tokenData.refreshToken);
         }),
         catchError(() => {
           this.logout();
@@ -158,6 +163,7 @@ export class AuthService {
 
   /**
    * Logout del usuario
+   * Consume: POST /api/auth/logout
    * Limpia tokens y redirige a login
    */
   logout(): void {
@@ -171,7 +177,7 @@ export class AuthService {
       headers = headers.set('X-Tenant-Slug', tenantSlug);
     }
 
-    this.http.post(`${this.apiUrl}/auth/logout`, {}, { headers, responseType: 'json' }).subscribe({
+    this.http.post(`${this.apiUrl}/auth/logout`, {}, { headers }).subscribe({
       complete: () => {
         this.clearTokens();
       },
@@ -194,7 +200,7 @@ export class AuthService {
     this.isLoading$.set(false);
     this.error$.set(null);
     this.authStateSubject.next(false);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   /**
@@ -209,7 +215,7 @@ export class AuthService {
   /**
    * Guarda el tenant slug en localStorage
    */
-  private savetenantSlug(tenantSlug: string): void {
+  private saveTenantSlug(tenantSlug: string): void {
     localStorage.setItem(this.tenantSlugKey, tenantSlug);
   }
 

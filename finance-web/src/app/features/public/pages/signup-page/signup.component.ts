@@ -163,7 +163,7 @@ export class SignupComponent {
    * Navega al login
    */
   goToLogin(): void {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   /**

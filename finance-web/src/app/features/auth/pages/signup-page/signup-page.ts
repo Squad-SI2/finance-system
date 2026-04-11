@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
@@ -7,24 +7,13 @@ import {
   ValidatorFn,
   Validators,
 } from "@angular/forms";
-import { Router, RouterLink } from "@angular/router";
-import { NgIcon } from "@ng-icons/core";
-import { HlmButtonImports } from "@shared/ui/button";
-import { HlmFieldImports } from "@shared/ui/field";
-import { HlmInputImports } from "@shared/ui/input";
+import { Router } from "@angular/router";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-signup-page",
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    HlmInputImports,
-    HlmFieldImports,
-    HlmButtonImports,
-    NgIcon,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: "./signup-page.html",
   styleUrl: "./signup-page.css",
 })
@@ -44,10 +33,13 @@ export class SignupPage {
 
   signup() {
     if (this.form.valid) {
-      // signup logic here
       console.log(this.form.value);
       this.router.navigateByUrl("/app");
     }
+  }
+
+  goToLogin() {
+    this.router.navigateByUrl("/auth/login");
   }
 }
 

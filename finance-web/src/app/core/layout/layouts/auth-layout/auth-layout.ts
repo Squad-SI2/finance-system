@@ -1,14 +1,10 @@
 import { Component } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideGalleryVerticalEnd } from "@ng-icons/lucide";
-import { remixCurrencyFill } from "@ng-icons/remixicon";
 
 @Component({
   selector: "app-auth-layout",
   standalone: true,
-  imports: [RouterOutlet, NgIcon],
-  providers: [provideIcons({ lucideGalleryVerticalEnd, remixCurrencyFill })],
+  imports: [RouterOutlet],
   templateUrl: "./auth-layout.html",
   styleUrl: "./auth-layout.css",
 })

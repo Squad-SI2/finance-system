@@ -1,0 +1,85 @@
+<div class="h-screen bg-[#f5f5f5] flex overflow-hidden">
+  
+  <!-- Overlay Móvil -->
+  @if (isSidebarOpen()) {
+    <div 
+      class="fixed inset-0 z-20 bg-[#333333] bg-opacity-75 transition-opacity md:hidden"
+      (click)="closeSidebar()">
+    </div>
+  }
+
+  <!-- Sidebar -->
+  <aside 
+    class="fixed inset-y-0 left-0 z-30 w-64 bg-[#333333] text-[#ffffff] flex flex-col justify-between transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0"
+    [class.-translate-x-full]="!isSidebarOpen()">
+    
+    <div>
+      <div class="h-16 flex items-center justify-between px-6 border-b border-[#666666]">
+        <h1 class="text-lg font-bold tracking-widest uppercase text-[#ffffff]">Admin Platform</h1>
+        <button (click)="closeSidebar()" class="md:hidden text-[#999999] hover:text-[#ffffff]">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <nav class="mt-6 px-4 space-y-2">
+        <a routerLink="/platform/tenants" routerLinkActive="bg-[#666666]" (click)="closeSidebar()" class="block px-4 py-2 rounded-lg transition hover:bg-[#666666]">
+          Empresas (Tenants)
+        </a>
+        <a routerLink="/platform/plans" routerLinkActive="bg-[#666666]" (click)="closeSidebar()" class="block px-4 py-2 rounded-lg text-[#cccccc] transition hover:bg-[#666666] hover:text-[#ffffff]">
+          Planes
+        </a>
+        <a routerLink="/platform/subscriptions" routerLinkActive="bg-[#666666]" (click)="closeSidebar()" class="block px-4 py-2 rounded-lg text-[#cccccc] transition hover:bg-[#666666] hover:text-[#ffffff]">
+          Suscripciones
+        </a>
+      </nav>
+    </div>
+
+    <div class="p-4 border-t border-[#666666]">
+      <a routerLink="/platform/profile" routerLinkActive="bg-[#666666]" (click)="closeSidebar()" class="w-full flex items-center justify-center gap-2 mb-2 bg-transparent text-[#cccccc] hover:text-[#ffffff] transition border border-transparent hover:border-[#666666] py-2 rounded-lg">
+        Mi Perfil
+      </a>
+      <button (click)="onLogout()" class="w-full flex items-center justify-center gap-2 bg-transparent text-[#cccccc] hover:text-[#ffffff] transition border border-[#666666] hover:border-[#ffffff] py-2 rounded-lg">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    
+    <!-- Topbar (Mobile mainly) -->
+    <header class="h-16 bg-[#ffffff] border-b border-[#cccccc] flex items-center justify-between px-4 sm:px-6 z-10 w-full relative">
+      <div class="flex items-center gap-4">
+        <button (click)="toggleSidebar()" class="md:hidden text-[#666666] hover:text-[#333333] focus:outline-none">
+          <span class="sr-only">Abrir sidebar</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h1 class="text-lg font-bold text-[#333333] md:hidden">Platform</h1>
+      </div>
+      
+      <div class="flex-1 md:flex-none"></div>
+      
+      <div class="flex items-center text-sm text-[#666666]">
+        <a routerLink="/platform/profile" class="hover:text-[#333333] flex items-center gap-2">
+          <div class="h-8 w-8 rounded-full bg-[#f5f5f5] border border-[#cccccc] flex items-center justify-center text-[#333333] font-bold">
+            S
+          </div>
+          <span class="hidden sm:block font-medium">Super Administrador</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main View -->
+    <main class="p-4 sm:p-6 flex-1 overflow-auto bg-[#f5f5f5] w-full">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</div>

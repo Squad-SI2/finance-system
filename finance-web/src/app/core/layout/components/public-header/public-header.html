@@ -1,5 +1,5 @@
 <header
-  class="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-xl"
+  class="sticky top-0 z-50 w-full border-b border-[#cccccc] bg-[#ffffff]/80 backdrop-blur-xl"
 >
   <div
     class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
@@ -11,16 +11,16 @@
         (click)="onLogoClick()"
       >
         <div
-          class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-xs font-semibold tracking-wide text-white shadow-sm transition group-hover:scale-[1.02]"
+          class="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#333333] text-xs font-semibold tracking-wide text-[#ffffff] shadow-sm transition group-hover:scale-[1.02]"
         >
-          TH
+          FN
         </div>
 
         <div class="flex flex-col items-start leading-none">
-          <span class="text-sm font-semibold tracking-tight text-slate-900">
-            MyApp
+          <span class="text-sm font-semibold tracking-tight text-[#333333]">
+            Finance
           </span>
-          <span class="text-xs text-slate-500"> Business platform </span>
+          <span class="text-xs text-[#666666]">Sistema Financiero</span>
         </div>
       </button>
 
@@ -28,7 +28,7 @@
         @for (item of navigationItems; track item.label) {
           <button
             type="button"
-            class="inline-flex h-10 items-center rounded-xl px-4 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+            class="inline-flex h-10 items-center rounded-xl px-4 text-sm font-medium text-[#666666] transition hover:bg-[#f5f5f5] hover:text-[#333333]"
             (click)="onNavigationItemClick(item)"
           >
             {{ item.label }}
@@ -39,37 +39,23 @@
 
     <div class="flex items-center gap-2">
       <button
-        hlmBtn
         type="button"
-        variant="ghost"
-        class="hidden sm:inline-flex"
+        class="hidden sm:inline-flex h-10 items-center rounded-xl px-4 text-sm font-medium text-[#666666] transition hover:bg-[#f5f5f5] hover:text-[#333333]"
         (click)="onLoginClick()"
       >
         Iniciar sesión
       </button>
       <button
-        hlmBtn
         type="button"
         (click)="onSignupClick()"
-        class="hidden sm:inline-flex"
+        class="hidden sm:inline-flex h-10 items-center rounded-xl px-4 text-sm font-medium text-[#ffffff] bg-[#333333] hover:bg-[#666666] transition"
       >
-        Sign Up
-      </button>
-      <button
-        hlmBtn
-        type="button"
-        (click)="onGetStartedClick()"
-        class="hidden sm:inline-flex"
-      >
-        Empezar
+        Registrarse
       </button>
 
       <button
-        hlmBtn
         type="button"
-        variant="ghost"
-        size="icon"
-        class="inline-flex lg:hidden"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[#666666] hover:bg-[#f5f5f5] lg:hidden"
         aria-label="Abrir menú"
       >
         ☰

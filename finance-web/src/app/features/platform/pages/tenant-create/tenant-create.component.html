@@ -1,0 +1,80 @@
+<div class="px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-xl font-bold text-[#333333]">Nueva Empresa (Tenant)</h1>
+    <p class="mt-2 text-sm text-[#666666]">
+      Crea un nuevo espacio de trabajo independiente para una empresa en la plataforma.
+    </p>
+  </div>
+
+  <div class="bg-[#ffffff] shadow-sm ring-1 ring-[#cccccc] sm:rounded-lg">
+    <form [formGroup]="tenantForm" (ngSubmit)="onSubmit()" class="px-4 py-5 sm:p-6">
+      
+      @if (error()) {
+        <div class="mb-6 rounded-md bg-[#f5f5f5] p-4 text-sm text-[#333333] border border-[#999999]">
+          {{ error() }}
+        </div>
+      }
+
+      <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        
+        <!-- Name -->
+        <div class="sm:col-span-4">
+          <label for="name" class="block text-sm font-medium text-[#333333]">
+            Nombre de la Empresa
+          </label>
+          <div class="mt-1">
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              (input)="onNameChange()"
+              [class]="hasFieldError('name') ? 'border-[#666666]' : 'border-[#cccccc]'"
+              class="block w-full rounded-md shadow-sm sm:text-sm px-3 py-2 border placeholder-[#999999] focus:outline-none focus:ring-[#333333] focus:border-[#333333]"
+              placeholder="Ej. Acme Corp" />
+          </div>
+          @if (hasFieldError('name')) {
+            <p class="mt-2 text-sm text-[#666666]">El nombre es requerido.</p>
+          }
+        </div>
+
+        <!-- Slug -->
+        <div class="sm:col-span-4">
+          <label for="slug" class="block text-sm font-medium text-[#333333]">
+            URL Personalizada (Slug)
+          </label>
+          <div class="mt-1 flex rounded-md shadow-sm">
+            <span class="inline-flex items-center rounded-l-md border border-r-0 border-[#cccccc] bg-[#f5f5f5] px-3 text-[#999999] sm:text-sm">
+              app.finance.com/
+            </span>
+            <input
+              type="text"
+              id="slug"
+              formControlName="slug"
+              [class]="hasFieldError('slug') ? 'border-[#666666]' : 'border-[#cccccc]'"
+              class="block w-full min-w-0 flex-1 rounded-none rounded-r-md sm:text-sm px-3 py-2 border focus:outline-none focus:ring-[#333333] focus:border-[#333333]"
+              placeholder="acme-corp" />
+          </div>
+          <p class="mt-2 text-xs text-[#999999]">Este slug se utilizará para aislar la base de datos de esta empresa. No puede contener espacios ni caracteres especiales.</p>
+          @if (hasFieldError('slug')) {
+            <p class="mt-2 text-sm text-[#666666]">El slug es requerido y debe tener formato url amigable.</p>
+          }
+        </div>
+      </div>
+
+      <div class="mt-8 flex justify-end gap-3 pt-5 border-t border-[#cccccc]">
+        <button
+          type="button"
+          routerLink="/platform/tenants"
+          class="rounded-md border border-[#cccccc] bg-[#ffffff] py-2 px-4 text-sm font-medium text-[#333333] shadow-sm hover:bg-[#f5f5f5] focus:outline-none transition">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="isSubmitting() || tenantForm.invalid"
+          class="inline-flex justify-center rounded-md border border-transparent bg-[#333333] py-2 px-4 text-sm font-medium text-[#ffffff] shadow-sm hover:bg-[#666666] focus:outline-none transition disabled:bg-[#cccccc] disabled:text-[#999999] disabled:cursor-not-allowed">
+          {{ isSubmitting() ? 'Creando Empresa...' : 'Guardar Empresa' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

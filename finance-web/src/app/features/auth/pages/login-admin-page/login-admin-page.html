@@ -1,82 +1,62 @@
 <div class="flex flex-col gap-6">
-  <form (ngSubmit)="onIngresarClick()">
-    <hlm-field-group>
-      <!-- HEADER -->
-      <div class="flex flex-col items-center gap-2 text-center">
-        <a href="#" class="flex flex-col items-center gap-2 font-medium">
-          <div class="flex size-8 items-center justify-center rounded-md">
-            <ng-icon name="lucideGalleryVerticalEnd" class="size-6" />
-          </div>
-        </a>
-        <h1 class="text-xl font-bold">Welcome back Superadmin</h1>
+  @if (errorMessage()) {
+    <div class="rounded-lg bg-[#f5f5f5] p-4 text-sm text-[#333333] border border-[#999999]">
+      {{ errorMessage() }}
+    </div>
+  }
 
-        <hlm-field-description>
-          Don't have an account? <a href="#">Sign up</a>
-        </hlm-field-description>
+  <form (ngSubmit)="onSubmit()" class="space-y-5">
+    <div class="flex flex-col items-center gap-2 text-center">
+      <div class="flex h-10 w-10 items-center justify-center rounded-md bg-[#333333]">
+        <svg class="h-5 w-5 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
       </div>
+      <h1 class="text-xl font-bold text-[#333333]">Bienvenido Superadmin</h1>
+      <p class="text-sm text-[#666666]">Portal de administración de la plataforma</p>
+    </div>
 
-      <!-- EMAIL -->
-      <hlm-field>
-        <label hlmFieldLabel for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="m@example.com"
-          hlmInput
-          required
-        />
-        <hlm-field-error validator="required"
-          >Email is required.</hlm-field-error
-        >
-        <hlm-field-error validator="email"
-          >Enter a valid email address.</hlm-field-error
-        >
-      </hlm-field>
+    <!-- Email -->
+    <div>
+      <label for="admin-email" class="mb-2 block text-sm font-medium text-[#333333]">
+        Email
+      </label>
+      <input
+        id="admin-email"
+        type="email"
+        placeholder="superadmin&#64;finance.com"
+        required
+        [value]="email()"
+        (input)="onEmailChange($event.target.value)"
+        class="w-full rounded-2xl border border-[#999999] bg-[#ffffff] px-4 py-3 text-sm text-[#333333] transition outline-none focus:border-[#333333] placeholder:text-[#999999]" />
+    </div>
 
-      <!-- PASSWORD -->
-      <hlm-field>
-        <label hlmFieldLabel for="password">Password</label>
-        <input
-          hlmInput
-          id="password"
-          type="password"
-          placeholder="********"
-          required
-        />
-        <hlm-field-error validator="required"
-          >Password is required.</hlm-field-error
-        >
-        <hlm-field-error validator="minlength"
-          >Password must be at least 8 characters long.</hlm-field-error
-        >
-      </hlm-field>
+    <!-- Password -->
+    <div>
+      <label for="admin-password" class="mb-2 block text-sm font-medium text-[#333333]">
+        Password
+      </label>
+      <input
+        id="admin-password"
+        type="password"
+        placeholder="••••••••"
+        required
+        [value]="password()"
+        (input)="onPasswordChange($event.target.value)"
+        class="w-full rounded-2xl border border-[#999999] bg-[#ffffff] px-4 py-3 text-sm text-[#333333] transition outline-none focus:border-[#333333] placeholder:text-[#999999]" />
+    </div>
 
-      <!-- LOGIN BUTTON -->
-      <hlm-field>
-        <button hlmBtn type="submit">Login</button>
-      </hlm-field>
-
-      <!-- SEPARATOR -->
-      <hlm-field-separator>Or</hlm-field-separator>
-
-      <!-- SOCIAL BUTTONS -->
-      <hlm-field class="grid gap-4 sm:grid-cols-2">
-        <button hlmBtn variant="outline" type="button">
-          <ng-icon name="remixGithubFill" class="text-xl" />
-          Continue with GitHub
-        </button>
-        <button hlmBtn variant="outline" type="button">
-          <ng-icon name="remixGoogleFill" />
-          <!-- Google SVG can be added here -->
-          Continue with Google
-        </button>
-      </hlm-field>
-    </hlm-field-group>
+    <!-- Login Button -->
+    <button
+      type="submit"
+      [disabled]="isLoading()"
+      class="w-full rounded-2xl bg-[#333333] px-4 py-3 text-sm font-medium text-[#ffffff] transition hover:bg-[#666666] disabled:opacity-50 disabled:cursor-not-allowed">
+      {{ isLoading() ? 'Autenticando...' : 'Ingresar' }}
+    </button>
   </form>
 
-  <!-- FOOTER -->
-  <div hlm-field-description class="px-6 text-center">
-    By clicking continue, you agree to our
-    <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+  <!-- Footer -->
+  <div class="px-6 text-center text-xs text-[#999999]">
+    Acceso exclusivo para administradores de la plataforma.
   </div>
 </div>

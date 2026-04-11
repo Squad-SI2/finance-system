@@ -1,6 +1,5 @@
 import { Component, inject } from "@angular/core";
 import { Router } from "@angular/router";
-import { HlmButton } from "@shared/ui/button";
 import {
   PUBLIC_NAVIGATION,
   PublicNavigationItem,
@@ -9,7 +8,7 @@ import {
 @Component({
   selector: "app-public-header",
   standalone: true,
-  imports: [HlmButton],
+  imports: [],
   templateUrl: "./public-header.html",
   styleUrl: "./public-header.css",
 })

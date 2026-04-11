@@ -1,33 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { ApiResponse } from '../../../core/models/api-response.model';
 
-export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'PENDING';
-
-export type UserRole = 'ADMIN' | 'USER' | 'MANAGER';
-
+/**
+ * Matches: identity.users.application.dto.TenantUserResponse
+ */
 export type User = {
   id: string;
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
-  role: UserRole;
-  status: UserStatus;
+  active: boolean;
+  status: string;
   createdAt: string;
   updatedAt: string;
-  lastLoginAt?: string;
 };
 
+/**
+ * Matches: identity.users.application.dto.CreateTenantUserRequest
+ */
 export type CreateUserRequest = {
-  firstName: string;
-  lastName: string;
   email: string;
   password: string;
-  role: UserRole;
-};
-
-export type UpdateUserStatusRequest = {
-  status: UserStatus;
+  firstName: string;
+  lastName: string;
 };
 
 @Injectable({
@@ -39,25 +36,45 @@ export class UsersService {
 
   /**
    * Obtiene la lista de usuarios del tenant actual
-   * El authInterceptor automáticamente agrega:
-   * - Authorization: Bearer <token>
-   * - X-Tenant-Slug: <slug>
+   * Consume: GET /api/users
+   * Backend retorna: ApiResponse<List<TenantUserResponse>>
    */
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.apiUrl, { responseType: 'json' });
+    return this.http
+      .get<ApiResponse<User[]>>(this.apiUrl)
+      .pipe(map((response) => response.data));
   }
 
   /**
    * Crea un nuevo usuario
+   * Consume: POST /api/users
+   * Backend retorna: ApiResponse<TenantUserResponse>
    */
   createUser(request: CreateUserRequest): Observable<User> {
-    return this.http.post<User>(this.apiUrl, request, { responseType: 'json' });
+    return this.http
+      .post<ApiResponse<User>>(this.apiUrl, request)
+      .pipe(map((response) => response.data));
   }
 
   /**
-   * Actualiza el estado de un usuario
+   * Activa un usuario
+   * Consume: PATCH /api/users/{id}/activate
+   * Backend retorna: ApiResponse<TenantUserResponse>
    */
-  updateUserStatus(userId: string, request: UpdateUserStatusRequest): Observable<User> {
-    return this.http.patch<User>(`${this.apiUrl}/${userId}/status`, request, { responseType: 'json' });
+  activateUser(userId: string): Observable<User> {
+    return this.http
+      .patch<ApiResponse<User>>(`${this.apiUrl}/${userId}/activate`, {})
+      .pipe(map((response) => response.data));
+  }
+
+  /**
+   * Desactiva un usuario
+   * Consume: PATCH /api/users/{id}/deactivate
+   * Backend retorna: ApiResponse<TenantUserResponse>
+   */
+  deactivateUser(userId: string): Observable<User> {
+    return this.http
+      .patch<ApiResponse<User>>(`${this.apiUrl}/${userId}/deactivate`, {})
+      .pipe(map((response) => response.data));
   }
 }

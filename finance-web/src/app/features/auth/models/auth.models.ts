@@ -1,32 +1,38 @@
 /**
  * Models for Authentication feature
- * DTOs that match the backend API responses
+ * DTOs aligned with the hexagonal backend:
+ *   - identity/auth/application/dto/LoginRequest.java
+ *   - identity/auth/application/dto/AuthTokenResponse.java
+ *   - identity/auth/application/dto/AuthenticatedTenantUserResponse.java
  */
 
+/** Matches: identity.auth.application.dto.LoginRequest */
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
+/** Matches: identity.auth.application.dto.AuthTokenResponse */
 export interface AuthTokenResponse {
+  tokenType: string;
   accessToken: string;
   refreshToken: string;
-  tokenType: string;
+  accessExpiresInMs: number;
 }
 
+/** Matches: identity.auth.application.dto.AuthenticatedTenantUserResponse */
 export interface UserInfo {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
-  tenantSlug?: string;
-  roles?: string[];
+  active: boolean;
+  status: string;
+  tenantSlug: string;
+  roles: string[];
 }
 
-export interface MeResponse {
-  user: UserInfo;
-}
-
+/** Auth UI state */
 export interface AuthState {
   user: UserInfo | null;
   accessToken: string | null;

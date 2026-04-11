@@ -1,52 +1,54 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
-import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideGalleryVerticalEnd } from "@ng-icons/lucide";
-import {
-  remixAppleFill,
-  remixGithubFill,
-  remixGoogleFill,
-  remixGoogleLine,
-} from "@ng-icons/remixicon";
-import { HlmButtonImports } from "@shared/ui/button";
-import {
-  HlmField,
-  HlmFieldImports,
-  HlmFieldLabel,
-  HlmFieldSeparator,
-} from "@shared/ui/field";
-import { HlmIconImports } from "@shared/ui/icon";
-import { HlmInput } from "@shared/ui/input";
+import { FormsModule } from "@angular/forms";
+import { PlatformAuthService } from "../../data-access/platform-auth.service";
 
 @Component({
   selector: "app-login-admin-page",
-  imports: [
-    HlmButtonImports,
-    HlmIconImports,
-    HlmFieldImports,
-    HlmField,
-    HlmFieldSeparator,
-    HlmFieldLabel,
-    HlmInput,
-    NgIcon,
-  ],
-  providers: [
-    provideIcons({
-      remixAppleFill,
-      remixGithubFill,
-      remixGoogleFill,
-      remixGoogleLine,
-      lucideGalleryVerticalEnd,
-    }),
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: "./login-admin-page.html",
   styleUrl: "./login-admin-page.css",
 })
 export class LoginAdminPage {
   private readonly router = inject(Router);
+  private readonly platformAuthService = inject(PlatformAuthService);
 
-  async onIngresarClick(): Promise<void> {
-    await this.router.navigateByUrl("/app");
+  email = signal("");
+  password = signal("");
+  
+  isLoading = signal(false);
+  errorMessage = signal<string | null>(null);
+
+  onEmailChange(value: string): void {
+    this.email.set(value);
+  }
+
+  onPasswordChange(value: string): void {
+    this.password.set(value);
+  }
+
+  onSubmit(): void {
+    if (!this.email() || !this.password()) {
+      this.errorMessage.set("Por favor ingresa correo y contraseña.");
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    this.platformAuthService
+      .login({ email: this.email(), password: this.password() })
+      .subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          // Redirige al módulo de plataforma que crearemos a continuación
+          this.router.navigateByUrl("/platform/tenants");
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          this.errorMessage.set(err.error?.message || "Error al iniciar sesión como Super Admin");
+        },
+      });
   }
 }

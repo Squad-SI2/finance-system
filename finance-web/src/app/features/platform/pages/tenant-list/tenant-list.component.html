@@ -1,0 +1,135 @@
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-bold text-[#333333]">Empresas (Tenants)</h1>
+      <p class="mt-2 text-sm text-[#666666]">
+        Lista de todos los negocios operando en la plataforma.
+      </p>
+    </div>
+    <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+      <a routerLink="new" class="inline-flex items-center justify-center rounded-md bg-[#333333] px-4 py-2 text-sm font-medium text-[#ffffff] shadow-sm hover:bg-[#666666] focus:outline-none transition">
+        Añadir Empresa
+      </a>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="mt-4 rounded-md bg-[#f5f5f5] p-4 border border-[#999999]">
+      <p class="text-sm text-[#333333]">{{ error() }}</p>
+    </div>
+  }
+
+  <div class="mt-8 flex flex-col">
+    <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+        <div class="overflow-hidden shadow ring-1 ring-[#cccccc] md:rounded-lg">
+          <table class="min-w-full divide-y divide-[#cccccc]">
+            <thead class="bg-[#f5f5f5]">
+              <tr>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[#333333] sm:pl-6">
+                  Nombre
+                </th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[#333333]">
+                  URL (Slug)
+                </th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[#333333]">
+                  Estado
+                </th>
+                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                  <span class="sr-only">Acciones</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#cccccc] bg-[#ffffff]">
+              @if (isLoading()) {
+                <tr>
+                  <td colspan="4" class="py-8 text-center text-sm text-[#666666]">
+                    Cargando empresas...
+                  </td>
+                </tr>
+              } @else if (tenants().length === 0) {
+                <tr>
+                  <td colspan="4" class="py-8 text-center text-sm text-[#666666]">
+                    No hay empresas registradas
+                  </td>
+                </tr>
+              } @else {
+                @for (tenant of tenants(); track tenant.id) {
+                  <tr>
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-[#333333] sm:pl-6">
+                      {{ tenant.name }}
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-[#666666]">
+                      {{ tenant.slug }}
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm">
+                      @if (tenant.active) {
+                        <span class="inline-flex rounded-full bg-[#f5f5f5] px-2 text-xs font-semibold leading-5 text-[#333333] border border-[#999999]">
+                          Activo
+                        </span>
+                      } @else {
+                        <span class="inline-flex rounded-full bg-[#ffffff] px-2 text-xs font-semibold leading-5 text-[#999999] border border-[#cccccc]">
+                          Inactivo
+                        </span>
+                      }
+                    </td>
+                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-3">
+                      <a [routerLink]="['/platform/tenants', tenant.id, 'edit']" class="text-[#666666] hover:text-[#333333] transition">
+                        Editar
+                      </a>
+                      <button (click)="requestStatusToggle(tenant)" class="text-[#666666] hover:text-[#333333] transition">
+                        {{ tenant.active ? 'Desactivar' : 'Activar' }}
+                      </button>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmación -->
+  @if (isConfirmingDeactivation()) {
+    <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-[#333333] bg-opacity-75 transition-opacity" (click)="cancelDeactivation()" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-[#ffffff] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-[#cccccc]">
+          <div class="bg-[#ffffff] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-[#f5f5f5] border border-[#cccccc] sm:mx-0 sm:h-10 sm:w-10">
+                <svg class="h-6 w-6 text-[#666666]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 class="text-lg leading-6 font-medium text-[#333333]" id="modal-title">
+                  Desactivar Empresa
+                </h3>
+                <div class="mt-2">
+                  <p class="text-sm text-[#666666]">
+                    ¿Estás seguro de que quieres desactivar la empresa <strong>{{ tenantToDeactivate()?.name }}</strong>? Todos los usuarios perderán acceso instantáneamente y la sesión será denegada hasta que vuelvas a activarla.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-[#f5f5f5] px-4 py-3 border-t border-[#cccccc] sm:px-6 sm:flex sm:flex-row-reverse">
+            <button type="button" (click)="confirmDeactivation()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#333333] text-base font-medium text-[#ffffff] hover:bg-[#666666] focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+              Sí, desactivar
+            </button>
+            <button type="button" (click)="cancelDeactivation()" class="mt-3 w-full inline-flex justify-center rounded-md border border-[#cccccc] shadow-sm px-4 py-2 bg-[#ffffff] text-base font-medium text-[#333333] hover:bg-[#f5f5f5] focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

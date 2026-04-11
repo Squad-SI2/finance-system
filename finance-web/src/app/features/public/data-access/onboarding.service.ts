@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { ApiResponse } from '../../../core/models/api-response.model';
 
+/**
+ * Matches: platform.onboarding.application.dto.PublicSignupRequest
+ */
 export type SignupRequest = {
   companyName: string;
   tenantSlug: string;
@@ -11,10 +15,19 @@ export type SignupRequest = {
   lastName: string;
 };
 
+/**
+ * Matches: platform.onboarding.application.dto.PublicSignupResponse
+ */
 export type SignupResponse = {
-  message: string;
   tenantId: string;
-  adminUserId: string;
+  tenantSlug: string;
+  companyName: string;
+  adminEmail: string;
+  initialRole: string;
+  currentPlanCode: string;
+  subscriptionStatus: string;
+  trialExpiresAt: string;
+  loginHint: string;
 };
 
 @Injectable({
@@ -26,9 +39,13 @@ export class OnboardingService {
 
   /**
    * Registra una nueva empresa y su administrador
+   * Consume: POST /api/public/signup
+   * Backend retorna: ApiResponse<PublicSignupResponse>
    * Este endpoint es público y no requiere autenticación
    */
   signup(request: SignupRequest): Observable<SignupResponse> {
-    return this.http.post<SignupResponse>(`${this.apiUrl}/signup`, request, { responseType: 'json' });
+    return this.http
+      .post<ApiResponse<SignupResponse>>(`${this.apiUrl}/signup`, request)
+      .pipe(map((response) => response.data));
   }
 }

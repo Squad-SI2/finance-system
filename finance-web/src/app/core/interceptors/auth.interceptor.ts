@@ -9,48 +9,60 @@ import { inject } from '@angular/core';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, filter, take, switchMap } from 'rxjs/operators';
 import { AuthService } from '../../features/auth/data-access/auth.service';
+import { PlatformAuthService } from '../../features/auth/data-access/platform-auth.service';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 /**
- * HttpInterceptor funcional que:
- * 1. Agrega el token JWT a todas las peticiones
- * 2. Maneja errores 401 (Unauthorized) refrescando el token
- * 3. Si el refresh falla, hace logout automáticamente
+ * HttpInterceptor funcional inteligente:
+ * Verifica si la URL es de plataforma (/api/platform) o de tenant (/api/...)
+ * Inyecta el token y headers correspondientes, y maneja el refresh 401.
  */
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
-  const authService = inject(AuthService);
+  const isPlatformRequest = req.url.startsWith('/api/platform');
+  
+  const tenantAuthService = inject(AuthService);
+  const platformAuthService = inject(PlatformAuthService);
 
-  // Obtener el token actual
-  const token = authService.getAccessToken();
-  const tenantSlug = authService.getTenantSlug();
+  let token: string | null = null;
 
-  // Agregar el token al header Authorization
-  if (token) {
-    req = addTokenToRequest(req, token);
-  }
+  if (isPlatformRequest) {
+    // Lógica para Super Admin (Plataforma)
+    token = platformAuthService.getAccessToken();
+    if (token) {
+      req = addTokenToRequest(req, token);
+    }
+  } else {
+    // Lógica para Usuarios de Tenant
+    token = tenantAuthService.getAccessToken();
+    const tenantSlug = tenantAuthService.getTenantSlug();
+    
+    if (token) {
+      req = addTokenToRequest(req, token);
+    }
 
-  // Agregar el tenant slug si existe
-  if (tenantSlug && !req.headers.has('X-Tenant-Slug')) {
-    req = req.clone({
-      setHeaders: {
-        'X-Tenant-Slug': tenantSlug,
-      },
-    });
+    if (tenantSlug && !req.headers.has('X-Tenant-Slug')) {
+      req = req.clone({
+        setHeaders: {
+          'X-Tenant-Slug': tenantSlug,
+        },
+      });
+    }
   }
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Si es un error 401 (Unauthorized), intentar refrescar el token
+      // Manejar el error 401 (Unauthorized) usando el servicio correcto
       if (error.status === 401) {
-        return handle401Error(req, next, authService, token);
+        const activeService = isPlatformRequest ? platformAuthService : tenantAuthService;
+        return handle401Error(req, next, activeService, token);
       }
 
-      // Para otros errores, simplemente propagar
+      // Propagar otros errores
       return throwError(() => error);
     })
   );
@@ -71,18 +83,14 @@ function addTokenToRequest(
 }
 
 /**
- * Maneja errores 401:
- * - Si ya está refrescando, espera a que termine
- * - Si no está refrescando, intenta refrescar el token
- * - Si el refresh falla, hace logout
+ * Maneja errores 401 unificadamente, utilizando el AuthService genérico inyectado
  */
 function handle401Error(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
-  authService: AuthService,
+  authService: any, // Puede ser AuthService o PlatformAuthService, ambos tienen refreshToken() y logout()
   token: string | null
 ): Observable<HttpEvent<unknown>> {
-  // Si ya estábamos refrescando, esperar a que termine
   if (isRefreshing) {
     return refreshTokenSubject.pipe(
       filter((newToken) => newToken !== null),
@@ -101,24 +109,20 @@ function handle401Error(
     );
   }
 
-  // Marcar que estamos refrescando
   isRefreshing = true;
   refreshTokenSubject.next(null);
 
-  // Intentar refrescar el token
   return authService.refreshToken().pipe(
-    switchMap((response) => {
+    switchMap((response: any) => {
       isRefreshing = false;
       const newToken = response.accessToken;
       refreshTokenSubject.next(newToken);
 
-      // Reintentar la petición original con el nuevo token
       const clonedReq = addTokenToRequest(req, newToken);
       return next(clonedReq);
     }),
-    catchError((error) => {
+    catchError((error: any) => {
       isRefreshing = false;
-      // Si el refresh falla, hacer logout automáticamente
       authService.logout();
       return throwError(() => new Error('Token refresh failed'));
     })

@@ -1,41 +1,40 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-[#f5f5f5] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-2xl">
     <!-- Logo y título -->
     <div class="text-center">
-      <div class="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center">
-        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="mx-auto h-16 w-16 bg-[#333333] rounded-full flex items-center justify-center">
+        <svg class="h-8 w-8 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
       </div>
-      <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+      <h2 class="mt-6 text-3xl font-extrabold text-[#333333]">
         Registra tu Empresa
       </h2>
-      <p class="mt-2 text-sm text-gray-600">
+      <p class="mt-2 text-sm text-[#666666]">
         Crea tu cuenta SaaS y comienza a gestionar tu negocio de manera profesional
       </p>
     </div>
 
     <div class="mt-8">
-      <div class="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10">
+      <div class="bg-[#ffffff] py-8 px-4 shadow-xl rounded-lg sm:px-10 border border-[#cccccc]">
         @if (isSuccess()) {
           <!-- Estado de éxito -->
           <div class="text-center">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
-              <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-[#cccccc]">
+              <svg class="h-8 w-8 text-[#333333]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 class="mt-4 text-lg font-medium text-gray-900">
+            <h3 class="mt-4 text-lg font-medium text-[#333333]">
               ¡Registro exitoso!
             </h3>
-            <p class="mt-2 text-sm text-gray-600">
+            <p class="mt-2 text-sm text-[#666666]">
               Tu empresa ha sido registrada correctamente. El administrador puede ahora iniciar sesión.
             </p>
             <div class="mt-6">
               <button
                 (click)="goToLogin()"
-                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[#ffffff] bg-[#333333] hover:bg-[#666666] transition">
                 Ir al Login
               </button>
             </div>
@@ -44,18 +43,18 @@
           <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-8">
             @if (error()) {
               <!-- Estado de error -->
-              <div class="rounded-md bg-red-50 p-4">
+              <div class="rounded-md bg-[#f5f5f5] p-4 border border-[#999999]">
                 <div class="flex">
                   <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                    <svg class="h-5 w-5 text-[#666666]" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                     </svg>
                   </div>
                   <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">
+                    <h3 class="text-sm font-medium text-[#333333]">
                       Error en el registro
                     </h3>
-                    <p class="text-sm text-red-700 mt-1">{{ error() }}</p>
+                    <p class="text-sm text-[#666666] mt-1">{{ error() }}</p>
                   </div>
                 </div>
               </div>
@@ -63,9 +62,9 @@
 
             <!-- Sección 1: Datos de la Empresa -->
             <div>
-              <div class="border-b border-gray-200 pb-4">
-                <h3 class="text-lg font-medium text-gray-900">Datos de la Empresa</h3>
-                <p class="mt-1 text-sm text-gray-600">
+              <div class="border-b border-[#cccccc] pb-4">
+                <h3 class="text-lg font-medium text-[#333333]">Datos de la Empresa</h3>
+                <p class="mt-1 text-sm text-[#666666]">
                   Información básica sobre tu organización
                 </p>
               </div>
@@ -73,7 +72,7 @@
               <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                 <!-- Company Name -->
                 <div class="sm:col-span-2">
-                  <label for="companyName" class="block text-sm font-medium text-gray-700">
+                  <label for="companyName" class="block text-sm font-medium text-[#333333]">
                     Nombre de la Empresa *
                   </label>
                   <div class="mt-1">
@@ -83,23 +82,22 @@
                       type="text"
                       formControlName="companyName"
                       (input)="generateSlug()"
-                      [class]="hasFieldError('companyName') ? 'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm"
-                      placeholder="Mi Empresa S.A."
-                    />
+                      [class]="hasFieldError('companyName') ? 'border-[#666666]' : 'border-[#cccccc]'"
+                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-[#999999] focus:outline-none focus:ring-[#333333] focus:border-[#333333] sm:text-sm text-[#333333]"
+                      placeholder="Mi Empresa S.A." />
                   </div>
                   @if (hasFieldError('companyName')) {
-                    <p class="mt-2 text-sm text-red-600">{{ getFieldError('companyName') }}</p>
+                    <p class="mt-2 text-sm text-[#666666]">{{ getFieldError('companyName') }}</p>
                   }
                 </div>
 
                 <!-- Tenant Slug -->
                 <div class="sm:col-span-2">
-                  <label for="tenantSlug" class="block text-sm font-medium text-gray-700">
+                  <label for="tenantSlug" class="block text-sm font-medium text-[#333333]">
                     Identificador Único *
                   </label>
                   <div class="mt-1 flex rounded-md shadow-sm">
-                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-[#cccccc] bg-[#f5f5f5] text-[#666666] text-sm">
                       app.com/
                     </span>
                     <input
@@ -107,16 +105,15 @@
                       name="tenantSlug"
                       type="text"
                       formControlName="tenantSlug"
-                      [class]="hasFieldError('tenantSlug') ? 'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                      class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border placeholder-gray-400 focus:outline-none sm:text-sm"
-                      placeholder="mi-empresa"
-                    />
+                      [class]="hasFieldError('tenantSlug') ? 'border-[#666666]' : 'border-[#cccccc]'"
+                      class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border placeholder-[#999999] focus:outline-none focus:ring-[#333333] focus:border-[#333333] sm:text-sm text-[#333333]"
+                      placeholder="mi-empresa" />
                   </div>
-                  <p class="mt-2 text-sm text-gray-500">
+                  <p class="mt-2 text-sm text-[#999999]">
                     Solo letras minúsculas, números y guiones. Este será tu subdominio único.
                   </p>
                   @if (hasFieldError('tenantSlug')) {
-                    <p class="mt-1 text-sm text-red-600">{{ getFieldError('tenantSlug') }}</p>
+                    <p class="mt-1 text-sm text-[#666666]">{{ getFieldError('tenantSlug') }}</p>
                   }
                 </div>
               </div>
@@ -124,9 +121,9 @@
 
             <!-- Sección 2: Datos del Administrador -->
             <div>
-              <div class="border-b border-gray-200 pb-4">
-                <h3 class="text-lg font-medium text-gray-900">Datos del Administrador</h3>
-                <p class="mt-1 text-sm text-gray-600">
+              <div class="border-b border-[#cccccc] pb-4">
+                <h3 class="text-lg font-medium text-[#333333]">Datos del Administrador</h3>
+                <p class="mt-1 text-sm text-[#666666]">
                   Información del usuario que administrará la cuenta
                 </p>
               </div>
@@ -134,7 +131,7 @@
               <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                 <!-- First Name -->
                 <div>
-                  <label for="firstName" class="block text-sm font-medium text-gray-700">
+                  <label for="firstName" class="block text-sm font-medium text-[#333333]">
                     Nombre *
                   </label>
                   <div class="mt-1">
@@ -143,19 +140,18 @@
                       name="firstName"
                       type="text"
                       formControlName="firstName"
-                      [class]="hasFieldError('firstName') ? 'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm"
-                      placeholder="Juan"
-                    />
+                      [class]="hasFieldError('firstName') ? 'border-[#666666]' : 'border-[#cccccc]'"
+                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-[#999999] focus:outline-none focus:ring-[#333333] focus:border-[#333333] sm:text-sm text-[#333333]"
+                      placeholder="Juan" />
                   </div>
                   @if (hasFieldError('firstName')) {
-                    <p class="mt-2 text-sm text-red-600">{{ getFieldError('firstName') }}</p>
+                    <p class="mt-2 text-sm text-[#666666]">{{ getFieldError('firstName') }}</p>
                   }
                 </div>
 
                 <!-- Last Name -->
                 <div>
-                  <label for="lastName" class="block text-sm font-medium text-gray-700">
+                  <label for="lastName" class="block text-sm font-medium text-[#333333]">
                     Apellido *
                   </label>
                   <div class="mt-1">
@@ -164,19 +160,18 @@
                       name="lastName"
                       type="text"
                       formControlName="lastName"
-                      [class]="hasFieldError('lastName') ? 'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm"
-                      placeholder="Pérez"
-                    />
+                      [class]="hasFieldError('lastName') ? 'border-[#666666]' : 'border-[#cccccc]'"
+                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-[#999999] focus:outline-none focus:ring-[#333333] focus:border-[#333333] sm:text-sm text-[#333333]"
+                      placeholder="Pérez" />
                   </div>
                   @if (hasFieldError('lastName')) {
-                    <p class="mt-2 text-sm text-red-600">{{ getFieldError('lastName') }}</p>
+                    <p class="mt-2 text-sm text-[#666666]">{{ getFieldError('lastName') }}</p>
                   }
                 </div>
 
                 <!-- Admin Email -->
                 <div class="sm:col-span-2">
-                  <label for="adminEmail" class="block text-sm font-medium text-gray-700">
+                  <label for="adminEmail" class="block text-sm font-medium text-[#333333]">
                     Email del Administrador *
                   </label>
                   <div class="mt-1">
@@ -185,19 +180,18 @@
                       name="adminEmail"
                       type="email"
                       formControlName="adminEmail"
-                      [class]="hasFieldError('adminEmail') ? 'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm"
-                      placeholder="admin@miempresa.com"
-                    />
+                      [class]="hasFieldError('adminEmail') ? 'border-[#666666]' : 'border-[#cccccc]'"
+                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-[#999999] focus:outline-none focus:ring-[#333333] focus:border-[#333333] sm:text-sm text-[#333333]"
+                      placeholder="admin&#64;miempresa.com" />
                   </div>
                   @if (hasFieldError('adminEmail')) {
-                    <p class="mt-2 text-sm text-red-600">{{ getFieldError('adminEmail') }}</p>
+                    <p class="mt-2 text-sm text-[#666666]">{{ getFieldError('adminEmail') }}</p>
                   }
                 </div>
 
                 <!-- Password -->
                 <div>
-                  <label for="password" class="block text-sm font-medium text-gray-700">
+                  <label for="password" class="block text-sm font-medium text-[#333333]">
                     Contraseña *
                   </label>
                   <div class="mt-1">
@@ -206,19 +200,18 @@
                       name="password"
                       type="password"
                       formControlName="password"
-                      [class]="hasFieldError('password') ? 'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm"
-                      placeholder="Mínimo 8 caracteres"
-                    />
+                      [class]="hasFieldError('password') ? 'border-[#666666]' : 'border-[#cccccc]'"
+                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-[#999999] focus:outline-none focus:ring-[#333333] focus:border-[#333333] sm:text-sm text-[#333333]"
+                      placeholder="Mínimo 8 caracteres" />
                   </div>
                   @if (hasFieldError('password')) {
-                    <p class="mt-2 text-sm text-red-600">{{ getFieldError('password') }}</p>
+                    <p class="mt-2 text-sm text-[#666666]">{{ getFieldError('password') }}</p>
                   }
                 </div>
 
                 <!-- Confirm Password -->
                 <div>
-                  <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+                  <label for="confirmPassword" class="block text-sm font-medium text-[#333333]">
                     Confirmar Contraseña *
                   </label>
                   <div class="mt-1">
@@ -227,13 +220,12 @@
                       name="confirmPassword"
                       type="password"
                       formControlName="confirmPassword"
-                      [class]="hasFieldError('confirmPassword') ? 'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm"
-                      placeholder="Repite la contraseña"
-                    />
+                      [class]="hasFieldError('confirmPassword') ? 'border-[#666666]' : 'border-[#cccccc]'"
+                      class="block w-full px-3 py-2 border rounded-md shadow-sm placeholder-[#999999] focus:outline-none focus:ring-[#333333] focus:border-[#333333] sm:text-sm text-[#333333]"
+                      placeholder="Repite la contraseña" />
                   </div>
                   @if (hasFieldError('confirmPassword')) {
-                    <p class="mt-2 text-sm text-red-600">{{ getFieldError('confirmPassword') }}</p>
+                    <p class="mt-2 text-sm text-[#666666]">{{ getFieldError('confirmPassword') }}</p>
                   }
                 </div>
               </div>
@@ -244,10 +236,9 @@
               <button
                 type="submit"
                 [disabled]="isLoading() || signupForm.invalid"
-                class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
+                class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-[#ffffff] bg-[#333333] hover:bg-[#666666] transition disabled:bg-[#cccccc] disabled:text-[#999999] disabled:cursor-not-allowed">
                 @if (isLoading()) {
-                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-[#ffffff]" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
@@ -260,12 +251,11 @@
 
             <!-- Login Link -->
             <div class="text-center">
-              <p class="text-sm text-gray-600">
+              <p class="text-sm text-[#666666]">
                 ¿Ya tienes una cuenta?
                 <a
-                  routerLink="/login"
-                  class="font-medium text-blue-600 hover:text-blue-500"
-                >
+                  (click)="goToLogin()"
+                  class="font-medium text-[#333333] hover:text-[#666666] underline cursor-pointer">
                   Inicia sesión aquí
                 </a>
               </p>

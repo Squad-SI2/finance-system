@@ -1,13 +1,13 @@
-import { Routes } from '@angular/router';
-import { AuthLayout } from './core/layout/layouts/auth-layout/auth-layout';
-import { PublicLayout } from './core/layout/layouts/public-layout/public-layout';
+import { Routes } from "@angular/router";
+import { AuthLayout } from "./core/layout/layouts/auth-layout/auth-layout";
+import { PublicLayout } from "./core/layout/layouts/public-layout/public-layout";
+import { AdminAuthLayout } from "./core/layout/layouts/admin-auth-layout/admin-auth-layout";
+import { AppLayout } from "./core/layout/layouts/app-layout/app-layout";
+import { PlatformLayout } from "./core/layout/layouts/platform-layout/platform-layout";
+import { platformGuard } from "./core/guards/platform.guard";
 
 export const routes: Routes = [
-  // {
-  //   path: 'products',
-  //   loadChildren: () =>
-  //     import('./products/products.routes').then((m) => m.productsRoutes),
-  // },
+  // Rutas públicas
   {
     path: "",
     component: PublicLayout,
@@ -20,11 +20,11 @@ export const routes: Routes = [
     ],
   },
 
+  // Auth de tenant
   {
     path: "auth",
     component: AuthLayout,
     children: [
-      // public login
       {
         path: "",
         loadChildren: () =>
@@ -33,26 +33,40 @@ export const routes: Routes = [
     ],
   },
 
+  // Auth de superadmin (plataforma)
   {
     path: "",
     component: AdminAuthLayout,
     children: [
-      // hidden login
       {
-        path: "plataform/auth",
+        path: "platform/auth",
         loadChildren: () =>
           import("./features/auth/auth.routes").then(m => m.ADMIN_ROUTES),
       },
     ],
   },
 
-  // Private
+  // Panel de Superadmin (Plataforma) protegido por guard
+  {
+    path: "platform",
+    component: PlatformLayout,
+    canActivate: [platformGuard],
+    children: [
+      {
+        path: "",
+        loadChildren: () =>
+          import("./features/platform/platform.routes").then(m => m.PLATFORM_ROUTES),
+      },
+    ],
+  },
+
+  // Rutas privadas del tenant
   {
     path: "app",
     component: AppLayout,
     children: [
       {
-        path: "", //default route
+        path: "",
         loadChildren: () =>
           import("./features/dashboard/dashboard.routes").then(
             m => m.DASHBOARD_ROUTES
@@ -71,13 +85,6 @@ export const routes: Routes = [
           import("./features/users/users.routes").then(m => m.USERS_ROUTES),
       },
       {
-        path: "products",
-        loadChildren: () =>
-          import("./features/products/products.routes").then(
-            m => m.PRODUCTS_ROUTES
-          ),
-      },
-      {
         path: "reports",
         loadChildren: () =>
           import("./features/reports/reports.routes").then(
@@ -92,5 +99,11 @@ export const routes: Routes = [
           ),
       },
     ],
+  },
+
+  // Ruta comodín
+  {
+    path: "**",
+    redirectTo: "",
   },
 ];
