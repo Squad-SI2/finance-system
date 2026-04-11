@@ -11,4 +11,9 @@ export const PUBLIC_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/pricing-page/pricing-page').then((m) => m.PricingPage),
   },
+  {
+    path: 'signup',
+    loadComponent: () =>
+      import('./pages/signup-page/signup.component').then((m) => m.SignupComponent),
+  },
 ];
