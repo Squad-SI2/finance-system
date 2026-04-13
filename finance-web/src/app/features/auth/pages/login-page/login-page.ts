@@ -1,45 +1,59 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../data-access/auth.service';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+
+import { finalize } from "rxjs";
+import { AppHttpError } from "../../../../core/http/models/app-http-error.model";
+import { LoginRequest } from "../../../../core/session/model/auth-user.type";
+import { SessionService } from "../../../../core/session/services/session.service";
+import { LoginForm } from "../../components/login-form/login-form";
 
 @Component({
-  selector: 'app-login-page',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './login-page.html',
-  styleUrl: './login-page.css',
+  selector: "app-login-page",
+  imports: [LoginForm],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: "./login-page.html",
 })
 export class LoginPage {
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private readonly sessionService = inject(SessionService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
-  // Signals para los datos del formulario
-  email = signal('');
-  password = signal('');
-  tenantSlug = signal('');
+  readonly isSubmitting = signal(false);
+  readonly errorMessage = signal<string | null>(null);
 
-  // Signals para el estado del formulario
-  isLoading = signal(false);
-  errorMessage = signal<string | null>(null);
+  onSubmit(payload: LoginRequest): void {
+    console.log("login payload", payload);
+    localStorage.setItem("tenant", payload.tenantSlug);
+    this.isSubmitting.set(true);
+    this.errorMessage.set(null);
 
-  onTenantSlugChange(value: string): void {
-    this.tenantSlug.set(value);
+    this.sessionService
+      .login(payload)
+      .pipe(finalize(() => this.isSubmitting.set(false)))
+      .subscribe({
+        next: () => {
+          console.log("login success, navigating...");
+          const returnUrl =
+            this.route.snapshot.queryParamMap.get("returnUrl") || "/app";
+          // console.log("redirect to: ", returnUrl);
+          void this.router.navigateByUrl(returnUrl);
+        },
+        error: (error: AppHttpError) => {
+          console.log("login form error", error);
+          this.errorMessage.set(error.message);
+          this.isSubmitting.set(false);
+        },
+      });
   }
 
-  onEmailChange(value: string): void {
-    this.email.set(value);
-  }
-
-  onPasswordChange(value: string): void {
-    this.password.set(value);
-  }
-
-  onSubmit(): void {
-    if (!this.email() || !this.password() || !this.tenantSlug()) {
-      this.errorMessage.set('Por favor completa todos los campos');
-      return;
+  onFormEdited(): void {
+    if (this.errorMessage()) {
+      this.errorMessage.set(null);
     }
 
     this.isLoading.set(true);
