@@ -3,8 +3,10 @@ import { Routes } from "@angular/router";
 import { AdminAuthLayout } from "./core/layout/layouts/admin-auth-layout/admin-auth-layout";
 import { AppLayout } from "./core/layout/layouts/app-layout/app-layout";
 import { AuthLayout } from "./core/layout/layouts/auth-layout/auth-layout";
+import { PlatformLayout } from "./core/layout/layouts/platform-layout/platform-layout";
 import { PublicLayout } from "./core/layout/layouts/public-layout/public-layout";
 import { authMatchGuard } from "./core/session/guards/auth-match.guard";
+import { platformGuard } from "./core/guards/platform.guard";
 import { publicOnlyGuard } from "./core/session/guards/public-only.guard";
 
 export const routes: Routes = [

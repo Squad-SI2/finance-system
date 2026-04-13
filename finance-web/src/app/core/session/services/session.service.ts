@@ -16,6 +16,7 @@ export class SessionService {
    */
   login(payload: LoginRequest): Observable<AuthUser> {
     this.sessionStore.setLoading();
+    this.setTenant(payload.tenantSlug); // Guardar el tenantSlug
 
     return this.sessionApi.login(payload).pipe(
       tap(loginResponse => {
@@ -31,6 +32,7 @@ export class SessionService {
       }),
       catchError((error: unknown) => {
         this.sessionStore.setUnauthenticated();
+        this.removeTenant();
         return throwError(() => error);
       })
     );

@@ -55,28 +55,5 @@ export class LoginPage {
     if (this.errorMessage()) {
       this.errorMessage.set(null);
     }
-
-    this.isLoading.set(true);
-    this.errorMessage.set(null);
-
-    this.authService
-      .login(
-        {
-          email: this.email(),
-          password: this.password(),
-        },
-        this.tenantSlug()
-      )
-      .subscribe({
-        next: () => {
-          this.isLoading.set(false);
-          this.router.navigate(['/app']);
-        },
-        error: (error) => {
-          this.isLoading.set(false);
-          const errorMsg = error.error?.message || 'Error al iniciar sesión';
-          this.errorMessage.set(errorMsg);
-        },
-      });
   }
 }
