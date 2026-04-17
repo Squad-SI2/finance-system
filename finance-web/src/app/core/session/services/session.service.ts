@@ -24,7 +24,7 @@ export class SessionService {
         console.log("Login response: ", loginResponse);
         this.sessionStore.setTokens(loginResponse.data);
       }),
-      switchMap(() => this.sessionApi.getMe()),
+      switchMap(() => this.sessionApi.getMe(payload.tenantSlug)),
       tap(user => {
         // getMe() logs
         console.log("getMe response: ", user);
@@ -42,7 +42,8 @@ export class SessionService {
    * Loads the currently authenticated user and stores it.
    */
   loadMe(): Observable<AuthUser> {
-    return this.sessionApi.getMe().pipe(
+    const tenantSlug = this.getTenant();
+    return this.sessionApi.getMe(tenantSlug || undefined).pipe(
       tap(user => {
         console.log("loadMe response", user);
         this.sessionStore.setAuthenticated(user);
@@ -83,7 +84,7 @@ export class SessionService {
     // }
     // this.sessionStore.setBootstrapStarted();
 
-    return this.sessionApi.getMe().pipe(
+    return this.sessionApi.getMe(this.getTenant() || undefined).pipe(
       tap(user => {
         // logs
         console.log("bootstrap getMe response", user);

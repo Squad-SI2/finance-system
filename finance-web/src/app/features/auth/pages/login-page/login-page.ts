@@ -28,7 +28,7 @@ export class LoginPage {
 
   onSubmit(payload: LoginRequest): void {
     console.log("login payload", payload);
-    localStorage.setItem("tenant", payload.tenantSlug);
+    // El SessionService ahora maneja el tenantSlug
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 

@@ -51,8 +51,7 @@ export class SessionApi {
   /**
    * Returns the current authenticated user.
    */
-  getMe(): Observable<AuthUser> {
-    const tenantSlug = this.getTenantSlug();
+  getMe(tenantSlug?: string): Observable<AuthUser> {
     let headers = new HttpHeaders();
     if (tenantSlug) {
       headers = headers.set('X-Tenant-Slug', tenantSlug);

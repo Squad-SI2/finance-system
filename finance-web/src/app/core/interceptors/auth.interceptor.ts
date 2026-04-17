@@ -10,6 +10,7 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, filter, take, switchMap } from 'rxjs/operators';
 import { AuthService } from '../../features/auth/data-access/auth.service';
 import { PlatformAuthService } from '../../features/auth/data-access/platform-auth.service';
+import { SessionService } from '../session/services/session.service';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -25,8 +26,9 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
   const isPlatformRequest = req.url.startsWith('/api/platform');
   
-  const tenantAuthService = inject(AuthService);
+  const sessionService = inject(SessionService);
   const platformAuthService = inject(PlatformAuthService);
+  const tenantAuthService = inject(AuthService);
 
   let token: string | null = null;
 
@@ -39,7 +41,7 @@ export const authInterceptor: HttpInterceptorFn = (
   } else {
     // Lógica para Usuarios de Tenant
     token = tenantAuthService.getAccessToken();
-    const tenantSlug = tenantAuthService.getTenantSlug();
+    const tenantSlug = sessionService.getTenant();
     
     if (token) {
       req = addTokenToRequest(req, token);
