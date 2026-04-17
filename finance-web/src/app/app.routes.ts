@@ -6,7 +6,6 @@ import { AuthLayout } from "./core/layout/layouts/auth-layout/auth-layout";
 import { PlatformLayout } from "./core/layout/layouts/platform-layout/platform-layout";
 import { PublicLayout } from "./core/layout/layouts/public-layout/public-layout";
 import { authMatchGuard } from "./core/session/guards/auth-match.guard";
-import { platformGuard } from "./core/guards/platform.guard";
 import { publicOnlyGuard } from "./core/session/guards/public-only.guard";
 
 export const routes: Routes = [
@@ -27,7 +26,7 @@ export const routes: Routes = [
   {
     path: "auth",
     component: AuthLayout,
-    canActivate: [publicOnlyGuard],
+    // canActivate: [guestGuard],
     children: [
       {
         path: "",
@@ -67,7 +66,7 @@ export const routes: Routes = [
   // Rutas privadas del tenant
   {
     path: "app",
-    canMatch: [authMatchGuard],
+    canActivate: [authGuard],
     component: AppLayout,
     children: [
       {
