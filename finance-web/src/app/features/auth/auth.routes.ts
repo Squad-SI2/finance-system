@@ -17,14 +17,3 @@ export const AUTH_ROUTES: Routes = [
   //path: "forgot-password"
   //path: "register"
 ];
-
-// Superadmin routes
-export const ADMIN_ROUTES: Routes = [
-  {
-    path: "login",
-    loadComponent: () =>
-      import("./pages/login-admin-page/login-admin-page").then(
-        m => m.LoginAdminPage
-      ),
-  },
-];

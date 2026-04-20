@@ -1,132 +1,174 @@
-<div class="min-h-screen bg-[#f5f5f5] p-6">
-  <div class="max-w-7xl mx-auto space-y-6">
+<section class="dashboard-page">
+  <div class="max-w-[1280px] mx-auto">
 
     @if (isLoading()) {
-      <!-- Loading state -->
-      <div class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#333333]"></div>
-        <span class="ml-3 text-[#666666]">Cargando dashboard...</span>
+      <!-- ===== Loading State ===== -->
+      <div class="flex items-center justify-center py-20">
+        <div class="flex flex-col items-center gap-4">
+          <div class="relative h-10 w-10">
+            <div class="absolute inset-0 animate-spin rounded-full border-[3px] border-[#e8e8e8] border-t-[#333333]"></div>
+          </div>
+          <p class="text-sm text-[#999999] font-medium">Cargando resumen...</p>
+        </div>
       </div>
+
     } @else if (error()) {
-      <!-- Error state -->
-      <div class="bg-[#ffffff] border border-[#999999] rounded-xl p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-[#666666]" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
+      <!-- ===== Error State ===== -->
+      <article class="card card-enter p-6">
+        <div class="flex items-start gap-4">
+          <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#f5f5f5] flex-shrink-0">
+            <i class="bx bx-error-circle text-xl text-[#999999]"></i>
           </div>
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-[#333333]">Error al cargar el dashboard</h3>
-            <p class="text-sm text-[#666666] mt-1">{{ error() }}</p>
+          <div>
+            <h3 class="text-sm font-semibold text-[#333333]">No se pudo cargar el dashboard</h3>
+            <p class="text-sm text-[#999999] mt-1">{{ error() }}</p>
           </div>
         </div>
-      </div>
+      </article>
+
     } @else if (summary()) {
-      <!-- Header con bienvenida -->
-      <div class="bg-[#ffffff] rounded-xl shadow-sm border border-[#cccccc] p-6">
-        <h1 class="text-3xl font-bold text-[#333333]">
-          ¡Bienvenido a {{ summary()!.tenant.name }}!
+      <!-- ===== Welcome Header ===== -->
+      <header class="mb-8 card-enter">
+        <h1 class="text-[28px] font-bold text-[#333333] tracking-tight">
+          {{ greetingText() }}, {{ greeting() }}
         </h1>
-        <p class="text-[#666666] mt-2">
-          Aquí tienes un resumen del estado de tu tenant y suscripción.
+        <p class="text-[15px] text-[#999999] mt-1">
+          Aquí tienes un resumen del estado de
+          <strong class="text-[#666666]">{{ summary()!.tenant.name }}</strong>
         </p>
-      </div>
+      </header>
 
-      <!-- Dashboard content -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Tarjeta del Plan -->
-        <div class="bg-[#ffffff] rounded-xl shadow-sm border border-[#cccccc] p-6">
-          <div class="flex items-center">
-            <div class="flex-shrink-0">
-              <svg class="h-8 w-8 text-[#333333]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+      <!-- ===== Stats Grid ===== -->
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mb-6">
+
+        <!-- Card: Plan Actual -->
+        <article class="card card-enter" style="animation-delay: 60ms">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="stat-label">Plan Actual</p>
+              <p class="stat-value">{{ summary()!.plan.name }}</p>
             </div>
-            <div class="ml-4">
-              <h3 class="text-lg font-medium text-[#666666]">Plan Actual</h3>
-              <p class="text-2xl font-bold text-[#333333]">{{ summary()!.plan.name }}</p>
+            <div class="stat-icon-wrapper">
+              <i class="bx bxs-crown text-lg text-[#666666]"></i>
             </div>
           </div>
-        </div>
+          <div class="mt-4 flex items-center gap-2">
+            <span class="inline-flex items-center gap-1 text-xs font-medium text-[#999999]">
+              <i class="bx bx-check-circle text-sm"></i>
+              Plan activo
+            </span>
+          </div>
+        </article>
 
-        <!-- Tarjeta del Estado de Suscripción -->
-        <div class="bg-[#ffffff] rounded-xl shadow-sm border border-[#cccccc] p-6">
-          <div class="flex items-center justify-between">
+        <!-- Card: Estado de Suscripción -->
+        <article class="card card-enter" style="animation-delay: 120ms">
+          <div class="flex items-start justify-between">
             <div>
-              <h3 class="text-lg font-medium text-[#666666]">Estado de Suscripción</h3>
-              <div class="mt-2">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#cccccc] text-[#333333]">
+              <p class="stat-label">Suscripción</p>
+              <div class="mt-1.5">
+                <span class="status-badge" [class]="getSubscriptionStatusClass()">
                   {{ getSubscriptionStatusText() }}
                 </span>
               </div>
-              @if (summary()!.subscription.expiresAt) {
-                <p class="text-sm text-[#666666] mt-2">
-                  Expira: {{ summary()!.subscription.expiresAt | date:'short' }}
-                </p>
-              }
-              @if (summary()!.subscription.remainingDays !== undefined) {
-                <p class="text-sm text-[#999999] mt-1">
-                  {{ summary()!.subscription.remainingDays }} días restantes
-                </p>
-              }
             </div>
-            <div class="flex-shrink-0">
-              <svg class="h-8 w-8 text-[#999999]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <div class="stat-icon-wrapper">
+              <i class="bx bx-time-five text-lg text-[#666666]"></i>
             </div>
           </div>
-        </div>
-
-        <!-- Tarjeta de Límite de Usuarios -->
-        <div class="bg-[#ffffff] rounded-xl shadow-sm border border-[#cccccc] p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-medium text-[#666666]">Usuarios</h3>
-            <span class="text-sm text-[#999999]">
-              {{ summary()!.usersCount }} / {{ summary()!.plan.maxUsers }}
-            </span>
-          </div>
-
-          <!-- Barra de progreso -->
-          <div class="w-full bg-[#cccccc] rounded-full h-3">
-            <div
-              class="h-3 rounded-full transition-all duration-300 bg-[#333333]"
-              [style.width.%]="usersProgress()">
-            </div>
-          </div>
-
-          <div class="flex justify-between text-sm text-[#666666] mt-2">
-            <span>{{ usersProgress() }}% utilizado</span>
-            @if (summary()?.canCreateUsers) {
-              <span class="text-[#333333]">✓ Puede crear más</span>
-            } @else {
-              <span class="text-[#999999]">✗ Límite alcanzado</span>
+          <div class="mt-4 space-y-1">
+            @if (summary()!.subscription.expiresAt) {
+              <p class="text-xs text-[#999999]">
+                <i class="bx bx-calendar text-sm mr-1 align-middle"></i>
+                Expira: {{ summary()!.subscription.expiresAt | date:'mediumDate' }}
+              </p>
+            }
+            @if (summary()!.subscription.remainingDays !== undefined) {
+              <p class="text-xs text-[#666666] font-medium">
+                {{ summary()!.subscription.remainingDays }} días restantes
+              </p>
             }
           </div>
-        </div>
+        </article>
+
+        <!-- Card: Usuarios -->
+        <article class="card card-enter" style="animation-delay: 180ms">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="stat-label">Usuarios</p>
+              <p class="stat-value">
+                {{ summary()!.usersCount }}
+                <span class="text-base font-normal text-[#cccccc]">/</span>
+                <span class="text-base font-normal text-[#999999]">{{ summary()!.plan.maxUsers }}</span>
+              </p>
+            </div>
+            <div class="stat-icon-wrapper">
+              <i class="bx bxs-group text-lg text-[#666666]"></i>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mt-4">
+            <div class="progress-track">
+              <div class="progress-bar" [style.width.%]="usersProgress()"></div>
+            </div>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-[11px] text-[#999999]">{{ usersProgress() }}% utilizado</span>
+              @if (summary()?.canCreateUsers) {
+                <span class="text-[11px] font-medium text-[#666666] flex items-center gap-1">
+                  <i class="bx bx-check text-sm"></i> Disponible
+                </span>
+              } @else {
+                <span class="text-[11px] font-medium text-[#999999] flex items-center gap-1">
+                  <i class="bx bx-block text-sm"></i> Límite alcanzado
+                </span>
+              }
+            </div>
+          </div>
+        </article>
       </div>
 
-      <!-- Alertas si existen -->
+      <!-- ===== Alerts Section ===== -->
       @if (summary()?.alerts && summary()!.alerts.length > 0) {
-        <div class="bg-[#ffffff] border border-[#999999] rounded-xl p-6">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <svg class="h-5 w-5 text-[#666666]" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-              </svg>
+        <article class="card card-enter border-l-[3px] border-l-[#666666] p-5" style="animation-delay: 240ms">
+          <div class="flex items-start gap-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#f5f5f5] flex-shrink-0 mt-0.5">
+              <i class="bx bx-info-circle text-lg text-[#666666]"></i>
             </div>
-            <div class="ml-3">
-              <h3 class="text-sm font-medium text-[#333333]">Alertas</h3>
-              <ul class="mt-2 text-sm text-[#666666]">
+            <div>
+              <h3 class="text-[13px] font-semibold text-[#333333]">Alertas del sistema</h3>
+              <ul class="mt-2 space-y-1.5">
                 @for (alert of summary()!.alerts; track alert) {
-                  <li>{{ alert }}</li>
+                  <li class="text-[13px] text-[#666666] flex items-start gap-2">
+                    <i class="bx bx-chevron-right text-sm text-[#cccccc] mt-0.5 flex-shrink-0"></i>
+                    {{ alert }}
+                  </li>
                 }
               </ul>
             </div>
           </div>
-        </div>
+        </article>
       }
+
+      <!-- ===== Quick Actions ===== -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        <button routerLink="/app/users/create" class="quick-action card-enter cursor-pointer" style="animation-delay: 340ms">
+          <i class="bx bx-user-plus text-xl text-[#666666]"></i>
+          <span class="text-[13px] font-medium text-[#333333]">Crear usuario</span>
+        </button>
+        <button class="quick-action card-enter" style="animation-delay: 340ms">
+          <i class="bx bx-shield-quarter text-xl text-[#666666]"></i>
+          <span class="text-[13px] font-medium text-[#333333]">Gestionar roles</span>
+        </button>
+        <button class="quick-action card-enter" style="animation-delay: 380ms">
+          <i class="bx bx-bar-chart-alt-2 text-xl text-[#666666]"></i>
+          <span class="text-[13px] font-medium text-[#333333]">Ver reportes</span>
+        </button>
+        <button class="quick-action card-enter" style="animation-delay: 420ms">
+          <i class="bx bx-cog text-xl text-[#666666]"></i>
+          <span class="text-[13px] font-medium text-[#333333]">Configuración</span>
+        </button>
+      </div>
     }
+
   </div>
-</div>
+</section>

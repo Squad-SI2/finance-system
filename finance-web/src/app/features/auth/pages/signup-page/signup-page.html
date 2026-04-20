@@ -1,74 +1,15 @@
-<form [formGroup]="form" (ngSubmit)="signup()" class="space-y-5">
-  <div class="flex flex-col items-center gap-1 text-center">
-    <h1 class="text-2xl font-bold text-[#333333]">Crear una cuenta</h1>
-    <p class="text-[#666666] text-sm text-balance">
-      Completa el formulario para crear tu cuenta
-    </p>
+<section class="mx-auto flex min-h-screen w-full max-w-md items-center px-6 py-12">
+  <div class="w-full">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <h1 class="mb-2 text-3xl font-bold text-foreground">Crear Cuenta</h1>
+      <p class="text-muted-foreground">
+        Crea tu tenant y empieza a gestionar tus finanzas hoy
+      </p>
+    </div>
+
+    <!-- Signup Form Component -->
+    <app-signup-form class="w-full" [isSubmitting]="isSubmitting()" [errorMessage]="errorMessage()"
+      (submitSignup)="onSubmit($event)" (formEdited)="onFormEdited()" />
   </div>
-
-  <div>
-    <label for="name" class="mb-2 block text-sm font-medium text-[#333333]">Nombre completo</label>
-    <input
-      type="text"
-      id="name"
-      placeholder="Juan Pérez"
-      formControlName="name"
-      class="w-full rounded-2xl border border-[#999999] bg-[#ffffff] px-4 py-3 text-sm text-[#333333] transition outline-none focus:border-[#333333] placeholder:text-[#999999]" />
-    @if (form.controls.name.touched && form.controls.name.invalid) {
-      <p class="mt-1 text-xs text-[#666666]">Nombre requerido (mínimo 4 caracteres).</p>
-    }
-  </div>
-
-  <div>
-    <label for="email" class="mb-2 block text-sm font-medium text-[#333333]">Email</label>
-    <input
-      type="email"
-      id="email"
-      placeholder="tu&#64;email.com"
-      formControlName="email"
-      class="w-full rounded-2xl border border-[#999999] bg-[#ffffff] px-4 py-3 text-sm text-[#333333] transition outline-none focus:border-[#333333] placeholder:text-[#999999]" />
-    @if (form.controls.email.touched && form.controls.email.invalid) {
-      <p class="mt-1 text-xs text-[#666666]">Ingresa un email válido.</p>
-    }
-  </div>
-
-  <div>
-    <label for="password" class="mb-2 block text-sm font-medium text-[#333333]">Contraseña</label>
-    <input
-      type="password"
-      id="password"
-      formControlName="password"
-      placeholder="Mínimo 8 caracteres"
-      class="w-full rounded-2xl border border-[#999999] bg-[#ffffff] px-4 py-3 text-sm text-[#333333] transition outline-none focus:border-[#333333] placeholder:text-[#999999]" />
-    @if (form.controls.password.touched && form.controls.password.invalid) {
-      <p class="mt-1 text-xs text-[#666666]">La contraseña debe tener al menos 8 caracteres.</p>
-    }
-  </div>
-
-  <div>
-    <label for="confirmPassword" class="mb-2 block text-sm font-medium text-[#333333]">Confirmar contraseña</label>
-    <input
-      type="password"
-      id="confirmPassword"
-      formControlName="confirmPassword"
-      placeholder="Repite la contraseña"
-      class="w-full rounded-2xl border border-[#999999] bg-[#ffffff] px-4 py-3 text-sm text-[#333333] transition outline-none focus:border-[#333333] placeholder:text-[#999999]" />
-    @if (form.controls.confirmPassword.touched && form.errors?.['passwordMismatch']) {
-      <p class="mt-1 text-xs text-[#666666]">Las contraseñas no coinciden.</p>
-    }
-  </div>
-
-  <button
-    type="submit"
-    [disabled]="form.invalid"
-    class="w-full rounded-2xl bg-[#333333] px-4 py-3 text-sm font-medium text-[#ffffff] transition hover:bg-[#666666] disabled:bg-[#cccccc] disabled:text-[#999999] disabled:cursor-not-allowed">
-    Crear Cuenta
-  </button>
-
-  <p class="text-center text-sm text-[#666666]">
-    ¿Ya tienes una cuenta?
-    <a (click)="goToLogin()" class="font-medium text-[#333333] hover:text-[#666666] underline cursor-pointer">
-      Inicia sesión
-    </a>
-  </p>
-</form>
+</section>

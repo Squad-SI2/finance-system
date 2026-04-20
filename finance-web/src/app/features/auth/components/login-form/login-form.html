@@ -73,7 +73,7 @@
     </hlm-field>
 
     <hlm-field>
-      <button hlmBtn type="submit" [disabled]="form.invalid || isSubmitting()">
+      <button hlmBtn type="submit" [disabled]="isSubmitting()">
         @if (isSubmitting()) {
           Signing in...
         } @else {
@@ -84,14 +84,10 @@
 
     <hlm-field-separator>Or continue with</hlm-field-separator>
 
-    <hlm-field>
-      <button hlmBtn variant="outline" type="button">
-        <ng-icon name="remixGithubFill" class="text-xl" />
-        Login with GitHub
-      </button>
-      <p hlmFieldDescription class="text-center">
+    <hlm-field class="text-center">
+      <p hlmFieldDescription>
         Don't have an account?
-        <a routerLink=".">Sign up</a>
+        <a routerLink="/auth/signup" class="hover:underline text-primary">Sign up</a>
       </p>
     </hlm-field>
   </hlm-field-group>

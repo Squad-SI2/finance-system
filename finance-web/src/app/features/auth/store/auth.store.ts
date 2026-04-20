@@ -8,6 +8,7 @@ import {
   LoginRequest,
   LoginTenantRequest,
 } from "../models/auth-request.type";
+import { SignupRequest } from "../models/signup-request.type";
 import { AuthService } from "../services/auth.service";
 
 @Injectable({
@@ -32,6 +33,33 @@ export class AuthStore {
   readonly errorMessage = computed(() => this.errorSignal()?.message ?? null);
 
   /**
+   * Registers a new user and creates a tenant.
+   * @param payload The signup credentials (company and admin info).
+   * @returns A promise that resolves to a boolean indicating whether signup was successful.
+   */
+  async signup(payload: SignupRequest): Promise<boolean> {
+    this.startRequest();
+
+    try {
+      await firstValueFrom(this.authService.signup(payload));
+
+      const user = await firstValueFrom(this.authService.getMe());
+      this.userSignal.set(user);
+
+      // Update session store with authenticated user
+      this.sessionStore.setAuthenticated(user);
+
+      this.successSignal.set(true);
+      return true;
+    } catch (error: unknown) {
+      this.errorSignal.set(error as AppHttpError);
+      return false;
+    } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+
+  /**
    * Logs in a user with the provided credentials.
    * @param payload The login credentials for the user.
    * @returns A promise that resolves to a boolean indicating whether the login was successful.
@@ -44,6 +72,9 @@ export class AuthStore {
 
       const user = await firstValueFrom(this.authService.getMe());
       this.userSignal.set(user);
+
+      // Update session store with authenticated user
+      this.sessionStore.setAuthenticated(user);
 
       this.successSignal.set(true);
       return true;

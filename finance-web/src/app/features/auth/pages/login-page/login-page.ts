@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { SessionStore } from "../../../../core/session/store/session.store";
@@ -24,42 +24,34 @@ export class LoginPage {
   readonly isSubmitting = this.authStore.loading;
   readonly errorMessage = this.authStore.errorMessage;
 
-<<<<<<< HEAD
-  onSubmit(payload: LoginRequest): void {
-    console.log("login payload", payload);
-    // El SessionService ahora maneja el tenantSlug
-    this.isSubmitting.set(true);
-    this.errorMessage.set(null);
-=======
   async onSubmit(payload: LoginRequest): Promise<void> {
+    console.log("login payload", payload);
     const success = await this.authStore.login(payload);
->>>>>>> 4ba55fe56d249dc41da7eeef80cbd4c51223c8d4
-
     if (!success) {
       return;
     }
-
     await this.navigateToReturnUrl();
   }
 
   async onSubmitWithTenant(payload: LoginTenantRequest): Promise<void> {
     const success = await this.authStore.loginWithTenant(payload);
-
     if (!success) {
       return;
     }
-
     console.log("Login successful,", this.sessionStore.isAuthenticated());
     await this.navigateToReturnUrl();
   }
-
   onFormEdited(): void {
     this.authStore.clearError();
   }
 
   private async navigateToReturnUrl(): Promise<void> {
-    const returnUrl =
-      this.route.snapshot.queryParamMap.get("returnUrl") || "/app";
+    let returnUrl = this.route.snapshot.queryParamMap.get("returnUrl");
+    
+    // If no returnUrl or it is generic, fallback to /app/dashboard
+    if (!returnUrl || returnUrl === "/" || returnUrl === "/app") {
+      returnUrl = "/app/dashboard";
+    }
 
     await this.router.navigateByUrl(returnUrl);
   }

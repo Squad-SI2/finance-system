@@ -13,7 +13,6 @@ import { User } from "../../models/user.model";
   selector: "app-user-table",
   imports: [HlmTableImports, HlmBadgeImports, HlmButtonImports],
   templateUrl: "./user-table.html",
-  styleUrl: "./user-table.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTable {

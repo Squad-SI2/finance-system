@@ -39,7 +39,6 @@ import { UsersStore } from "../../store/user.store";
     }),
   ],
   templateUrl: "./user-list-page.html",
-  styleUrl: "./user-list-page.css",
 })
 export class UserListPage implements OnInit {
   readonly store = inject(UsersStore);

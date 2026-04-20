@@ -5,6 +5,7 @@ import { SKIP_AUTH_REFRESH } from "../../../core/http/context/skip-auth-refresh.
 import { AccessTokenService } from "../../../core/http/services/access-token.service";
 import { HeaderTenantService } from "../../../core/http/services/header-tenant.service";
 import { LoginRequest, LoginTenantRequest } from "../models/auth-request.type";
+import { SignupRequest, SignupData, SignupResponse } from "../models/signup-request.type";
 import {
   AuthMeResponse,
   LoginData,
@@ -22,7 +23,30 @@ export class AuthService {
   private readonly authBasePath = "/api/auth";
 
   /**
-   *  Logs in a user with the provided credentials.
+   * Registers a new user and creates a tenant with DEMO plan.
+   * @param payload The signup credentials (company and admin info).
+   * @returns An observable that emits the signup data with tokens.
+   */
+  signup(payload: SignupRequest): Observable<SignupData> {
+    return this.http
+      .post<SignupResponse>("/api/public/signup", payload)
+      .pipe(
+        map(response => response.data),
+        tap(data => {
+          // Automatically store tokens and tenant slug from signup response
+          this.accessTokenService.setTokens({
+            tokenType: data.tokenType,
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+            accessExpiresInMs: data.accessExpiresInMs,
+          });
+          this.tenantService.setTenant(data.tenantSlug);
+        })
+      );
+  }
+
+  /**
+   * Logs in a user with the provided credentials.
    * @param payload The login credentials.
    * @returns An observable that emits the login data upon successful authentication.
    */

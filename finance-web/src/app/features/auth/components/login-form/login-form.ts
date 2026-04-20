@@ -10,9 +10,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 
-import { NgIcon, provideIcons } from "@ng-icons/core";
-import { remixGithubFill } from "@ng-icons/remixicon";
-
 import { HlmButtonImports } from "@shared/ui/button";
 import { HlmFieldImports } from "@shared/ui/field";
 import { HlmInputImports } from "@shared/ui/input";
@@ -29,9 +26,7 @@ import {
     HlmFieldImports,
     HlmInputImports,
     HlmButtonImports,
-    NgIcon,
   ],
-  providers: [provideIcons({ remixGithubFill })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./login-form.html",
 })
